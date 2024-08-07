@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { AuthGuard } from 'app/auth/auth.guard';
 
 @Component({
   selector: 'app-user',
@@ -8,9 +10,18 @@ import { Component, OnInit } from '@angular/core';
 export class UserComponent implements OnInit {
   isActive: boolean = false; // Estado inicial del switch
 
-  constructor() { }
+  constructor(private authService: AuthGuard, private router: Router) { }
 
   ngOnInit() {
+    const token = localStorage.getItem('authToken');
+    if (token) {
+      const decodedToken = this.authService.decodeToken(token);
+      
+      if(decodedToken.role === 'Consulta'){
+        this.router.navigate(['/informes']);
+      }
+      
+    }
   }
 
   onSwitchChange() {

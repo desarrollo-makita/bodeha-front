@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, Router } from '@angular/router';
 import { Observable } from 'rxjs';
+import { jwtDecode} from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
@@ -19,4 +20,14 @@ export class AuthGuard implements CanActivate {
 
     return true;
   }
+
+    // Método para decodificar el token
+    decodeToken(token: string): any {
+      try {
+        return jwtDecode(token);
+      } catch (error) {
+        console.error('Error decoding token:', error);
+        return null;
+      }
+    }
 }
