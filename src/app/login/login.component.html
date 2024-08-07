@@ -7,12 +7,12 @@
             <br>
             <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
                 <div class="form-floating mb-3">
-                    <input type="text" class="form-control custom-input" id="usuario" placeholder="Usuario"
+                    <input type="text" class="form-control custom-input"  autocomplete="usuario" id="usuario" placeholder="Usuario"
                         formControlName="usuario" (click)="clearUsuario()">
                 </div>
                 
                 <div class="form-floating mb-3">
-                    <input type="password" class="form-control custom-input" id="clave" placeholder="Clave"
+                    <input type="password" class="form-control custom-input" autocomplete="current-password" id="clave" placeholder="Clave"
                         formControlName="clave" (click)="clearUsuario()" >
                 </div>
                 <br>

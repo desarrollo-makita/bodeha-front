@@ -1,5 +1,5 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
-import { ROUTES } from '../../sidebar/sidebar.component';
+
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { MyDataService } from 'app/services/data/my-data.service';
 import { Router } from '@angular/router';
@@ -23,7 +23,8 @@ export class NavbarComponent implements OnInit{
         location: Location,  
         private element: ElementRef, 
         private myDataService: MyDataService,
-        private router: Router) 
+        private router: Router,
+        private dataSharingService : MyDataService) 
         {
         
             this.location = location;
@@ -33,13 +34,13 @@ export class NavbarComponent implements OnInit{
 
     ngOnInit(){
       
-        this.listTitles = ROUTES.filter(listTitle => listTitle);
+        this.dataSharingService.getArrayData().subscribe(data => {
+            this.listTitles = data;
+          });
         const navbar: HTMLElement = this.element.nativeElement;
         this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
       
         this.myDataService.getStringData().subscribe((data: any) => {
-            
-            console.log(data);
             let title = data.Nombre;
             this.showIcons = data.Nombre === "Usuarios" ? true : false;
         });
@@ -63,8 +64,8 @@ export class NavbarComponent implements OnInit{
         body.classList.remove('nav-open');
     };
     sidebarToggle() {
-        // const toggleButton = this.toggleButton;
-        // const body = document.getElementsByTagName('body')[0];
+        const toggleButton = this.toggleButton;
+        const body = document.getElementsByTagName('body')[0];
         if (this.sidebarVisible === false) {
             this.sidebarOpen();
         } else {
@@ -76,14 +77,15 @@ export class NavbarComponent implements OnInit{
       var titlee = this.location.prepareExternalUrl(this.location.path());
       if(titlee.charAt(0) === '#'){
           titlee = titlee.slice( 1 );
+         
       }
 
       for(var item = 0; item < this.listTitles.length; item++){
-          if(this.listTitles[item].path === titlee){
-              return this.listTitles[item].title;
+          if(this.listTitles[item].Ruta === titlee){
+              return this.listTitles[item].Nombre;
           }
       }
-      return 'Dashboard';
+      return 'Mantenedor';
     }
 
     logout(): void {
@@ -91,5 +93,5 @@ export class NavbarComponent implements OnInit{
     
         // Redirigir a la página de inicio de sesión
         this.router.navigate(['/login']);
-      }
+    }
 }

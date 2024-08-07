@@ -39,7 +39,12 @@ export class LoginComponent {
           
           this.dataService.setArrayData(response.data.menu);
           
-          this.router.navigate(['/user']);
+          if(response.data.Rol === 'Consulta'){
+            this.router.navigate(['/informes']);
+          }else if(response.data.Rol === 'Administrador'){
+            this.router.navigate(['/user']);
+          }
+          
         },
         error: error => {
       
