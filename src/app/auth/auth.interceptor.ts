@@ -32,26 +32,26 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private handleError(error: HttpErrorResponse): void {
     // Manejo de errores HTTP
-    console.error('Error en la solicitud', error);
+    console.log('Error en la solicitud', error);
 
     // Manejo de errores específicos por código de estado
     switch (error.status) {
       case 401:
         console.log('No autorizado - Error 401');
-        window.location.href = '/login';
+       
         // Redirigir a la página de login, por ejemplo
         break;
       case 403:
         console.log('Prohibido - Error 403');
-        window.location.href = '/login';
+       
         break;
       case 404:
         console.log('No encontrado - Error 404');
-        window.location.href = '/login';
+      
         break;
       case 500:
         console.log('Error en el servidor - Error 500');
-        window.location.href = '/login';
+      
         break;
       default:
         console.log('Error desconocido');

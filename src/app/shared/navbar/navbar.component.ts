@@ -2,6 +2,7 @@ import { Component, OnInit, ElementRef } from '@angular/core';
 import { ROUTES } from '../../sidebar/sidebar.component';
 import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
 import { MyDataService } from 'app/services/data/my-data.service';
+import { Router } from '@angular/router';
 
 @Component({
     // moduleId: module.id,
@@ -18,11 +19,17 @@ export class NavbarComponent implements OnInit{
     
     
 
-    constructor(location: Location,  private element: ElementRef, private myDataService: MyDataService) {
-        this.location = location;
-        this.sidebarVisible = false;
-        this.showIcons = true;
-    }
+    constructor(
+        location: Location,  
+        private element: ElementRef, 
+        private myDataService: MyDataService,
+        private router: Router) 
+        {
+        
+            this.location = location;
+            this.sidebarVisible = false;
+            this.showIcons = true;
+        }
 
     ngOnInit(){
       
@@ -78,4 +85,11 @@ export class NavbarComponent implements OnInit{
       }
       return 'Dashboard';
     }
+
+    logout(): void {
+        localStorage.removeItem('authToken');
+    
+        // Redirigir a la página de inicio de sesión
+        this.router.navigate(['/login']);
+      }
 }

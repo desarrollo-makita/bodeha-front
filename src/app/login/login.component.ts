@@ -32,10 +32,14 @@ export class LoginComponent {
       this.isLoading = true; // Mostrar el loader
       this.loginService.login(usuario, clave).subscribe({
         next: response => {
+          // Guarda el token en el localStorage
+          localStorage.setItem('authToken', response.data.token);
+          
           console.log('Login successful', response);
+          
           this.dataService.setArrayData(response.data.menu);
           
-          this.router.navigate(['/home']);
+          this.router.navigate(['/user']);
         },
         error: error => {
       
@@ -60,4 +64,6 @@ export class LoginComponent {
       this.showMessage = false;
     }
   }
+
+ 
 }

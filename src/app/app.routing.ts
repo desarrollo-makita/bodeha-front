@@ -5,6 +5,8 @@ import { Routes, RouterModule } from '@angular/router';
 
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { LoginComponent } from './login/login.component';
+import { UserComponent } from './user/user.component';
+import { InformesComponent } from './informes/informes.component';
 import { AuthGuard } from './auth/auth.guard';
 
 const routes: Routes =[
@@ -17,10 +19,12 @@ const routes: Routes =[
     path: 'login',  // Ruta para el login
     component: LoginComponent
   },
+
+
   {
     path: '',
     component: AdminLayoutComponent,
-    canActivate: [AuthGuard], // Protege esta ruta
+    canActivate: [AuthGuard],
     children: [
         {
       path: '',
