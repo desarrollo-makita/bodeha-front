@@ -25,7 +25,8 @@ export class LoginComponent {
   }
 
   onSubmit() {
-
+    localStorage.removeItem('authToken');
+    
     if (this.loginForm.valid) {
       const { usuario, clave } = this.loginForm.value;
      
