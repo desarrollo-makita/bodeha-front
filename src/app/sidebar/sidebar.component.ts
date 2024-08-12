@@ -29,29 +29,11 @@ export class SidebarComponent implements OnInit {
   constructor(private dataSharingService: MyDataService , private router: Router) { }
 
   ngOnInit() {
-    this.dataSharingService.getArrayData().subscribe(data => {
-      this.menuItems = data;
-      
-      this.router.events.subscribe(event => {
-        if (event instanceof NavigationEnd) {
-          const currentUrl = this.router.url;
-          this.menuItems.forEach(element =>{
-            if(element.Ruta === currentUrl ){
-              this.dataSharingService.setStringData(element);
-            }
-          });
-        }
-      });
-    });
 
-    
-    
+    const arregloRecuperado = sessionStorage.getItem('menu');
+    this.menuItems = JSON.parse(arregloRecuperado);
   }
 
-  updateCurrentMenu() {
-    
-    
-  }
   isMobileMenu() {
       if ($(window).width() > 991) {
           return false;

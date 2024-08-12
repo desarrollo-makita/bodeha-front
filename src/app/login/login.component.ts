@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MyDataService } from 'app/services/data/my-data.service';
@@ -9,7 +9,7 @@ import { LoginService } from 'app/services/login/login.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;
   errorMessage: string = '';
@@ -24,9 +24,13 @@ export class LoginComponent {
     });
   }
 
-  onSubmit() {
-    localStorage.removeItem('authToken');
+  ngOnInit() {
+    sessionStorage.removeItem('authToken');
+    sessionStorage.removeItem('menu');
     
+  }
+
+  onSubmit() {
     if (this.loginForm.valid) {
       const { usuario, clave } = this.loginForm.value;
      
@@ -34,22 +38,26 @@ export class LoginComponent {
       this.loginService.login(usuario, clave).subscribe({
         next: response => {
           // Guarda el token en el localStorage
-          localStorage.setItem('authToken', response.data.token);
+          sessionStorage.setItem('authToken', response.data.token);
           
-          console.log('Login successful', response);
+          // Guarda el token en el localStorage
+          sessionStorage.setItem('menu', JSON.stringify(response.data.menu));
           
           this.dataService.setArrayData(response.data.menu);
+          
+          console.log('Login successful', response);
           
           if(response.data.Rol === 'Consulta'){
             this.router.navigate(['/informes']);
           }else if(response.data.Rol === 'Administrador'){
             this.router.navigate(['/user']);
+            return;
           }
           
         },
         error: error => {
       
-          console.error('Login failed', error);
+          console.log('Login failed', error);
           this.errorMessage = 'Login fallido. Verifique sus credenciales.'; // Actualizar el mensaje de error
           this.showMessage = true;
           this.isLoading = false; // Ocultar el loader

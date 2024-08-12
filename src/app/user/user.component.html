@@ -4,10 +4,10 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="header">
-                        <h4 class="title">Agregar Usuario</h4>
+                        <h4 class="title"><strong>Agregar Usuario</strong></h4>
                     </div>
                     <div class="content">
-                        <form>
+                        <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
                             <div class="row">
                                 <div class="col-md-5">
                                     <div class="form-group">
@@ -18,13 +18,16 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="usuario">Usuario</label>
-                                        <input type="text" id="usuario" class="form-control" placeholder="Usuario" value="jherrera">
+                                        <input type="text" id="usuario" class="form-control" placeholder="Usuario" formControlName="usuario">
                                     </div>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="email" id="email" class="form-control" placeholder="Email">
+                                        <input type="email" id="email" class="form-control" placeholder="ejemplo@makita.cl" formControlName="email">
+                                        <div *ngIf="userForm.get('email').invalid && userForm.get('email').touched" class="text-danger">
+                                            Ingrese Email valido.
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -33,13 +36,13 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="nombre">Nombre</label>
-                                        <input id="nombre"type="text" class="form-control" placeholder="Nombre" value="">
+                                        <input id="nombre"type="text" class="form-control" placeholder="Nombre" value="" formControlName="nombre">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="apellido">Apellido</label>
-                                        <input id="apellido" type="text" class="form-control" placeholder="Apellido" value="">
+                                        <input id="apellido" type="text" class="form-control" placeholder="Apellido" value="" formControlName="apellido">
                                     </div>
                                 </div>
                             </div>
@@ -47,25 +50,79 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="fechaInicio">Fecha de Inicio</label>
-                                        <input type="date" id="fechaInicio" class="form-control" placeholder="Fecha de Inicio">
+                                        <input type="date" id="fechaInicio" class="form-control" placeholder="Fecha de Inicio" formControlName="fechaInicio">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="fechaFin">Fecha Final</label>
-                                        <input type="date" id="fechaFin" class="form-control" placeholder="Fecha Final">
+                                        <input type="date" id="fechaFin" class="form-control" placeholder="Fecha Final" formControlName="fechaFin">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="header">
+                                <div class="row">
+                                    <h4 class="title"><strong>Permisos</strong></h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="form-group">
+                                        <label for="password">Contraseña</label>
+                                        <input type="password" id="password" class="form-control" placeholder="Clave" formControlName="password">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
                                     <div class="form-group">
-                                        <label for="password">Contraseña</label>
-                                        <input type="password" id="password" class="form-control" placeholder="Clave">
+                                        <label for="role">Rol</label>
+                                        <select id="role" class="form-control" formControlName="role" (change)="onRoleChange($event)">
+                                            <option value="Administrador">Administrador</option>
+                                            <option value="Consulta">Consulta</option>
+                                        </select>
                                     </div>
                                 </div>
-                                
+                                <div class="col-md-3" *ngIf="showOtherSelects">
+                                    <div class="form-group">
+                                        <label for="area">Area</label>
+                                        <select id="area" class="form-control" formControlName="area" >
+                                            <option value="herramientas">Herramientas</option>
+                                            <option value="accesorios">Accesorios</option>
+                                            <option value="inventario">Almacenamiento</option>
+                                            <option value="ubicacion">Repuestos</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3" *ngIf="showOtherSelects">
+                                    <div class="form-group" >
+                                        <label for="actividad">Actividad</label>
+                                        <select id="actividad" class="form-control" formControlName="actividad">
+                                            <option value="inventario">Inventario</option>
+                                            <option value="picking">Picking</option>
+                                            <option value="paking">Packing</option>
+                                            <option value="ubicacion">ubicacion</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="checkbox col-md-3">
+                                    <div class="form-group">
+                                        <input id="usuarioActivo" type="checkbox" formControlName="usuarioActivo">
+                                        <label for="usuarioActivo">
+                                          Activo
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                             
-                            <button type="submit" class="btn btn-info btn-fill pull-right">Guardar</button>
+                            <button type="submit" class="btn btn-info btn-fill pull-right" [disabled]="userForm.invalid">Guardar</button>
+                            <br>
+                            <br>
+                            
+                            <hr>
+                            <div *ngIf="successMessage" class="alert alert-success mt-3" role="alert">
+                                ¡Usuario creado con éxito!
+                              </div>
                             <div class="clearfix"></div>
                         </form>
                     </div>

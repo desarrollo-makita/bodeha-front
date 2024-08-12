@@ -1,0 +1,12 @@
+.form-group label {
+    font-weight: bold;
+}
+
+.text-danger {
+    color: #dc3545;
+    font-weight: bold;
+  }
+
+  .alert-success {
+    background-color: rgba(0, 144, 158, 0.8);
+  }

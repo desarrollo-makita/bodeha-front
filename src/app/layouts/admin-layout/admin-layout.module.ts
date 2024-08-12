@@ -22,7 +22,7 @@ import { UserComponent } from '../../user/user.component';
   ],
   declarations: [
     InformesComponent,
-    UserComponent
+ 
   ]
 })
 

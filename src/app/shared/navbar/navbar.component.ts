@@ -1,8 +1,9 @@
 import { Component, OnInit, ElementRef } from '@angular/core';
 
-import {Location, LocationStrategy, PathLocationStrategy} from '@angular/common';
+import { Location } from '@angular/common';
 import { MyDataService } from 'app/services/data/my-data.service';
 import { Router } from '@angular/router';
+import { AuthGuard } from 'app/auth/auth.guard';
 
 @Component({
     // moduleId: module.id,
@@ -16,15 +17,15 @@ export class NavbarComponent implements OnInit{
     private toggleButton: any;
     private sidebarVisible: boolean;
     showIcons: boolean;
-    
-    
-
+    menuItems : any;
+    title: string;
     constructor(
         location: Location,  
         private element: ElementRef, 
         private myDataService: MyDataService,
         private router: Router,
-        private dataSharingService : MyDataService) 
+        private dataSharingService : MyDataService,
+        private authService : AuthGuard) 
         {
         
             this.location = location;
@@ -33,17 +34,28 @@ export class NavbarComponent implements OnInit{
         }
 
     ngOnInit(){
+        
+        const arregloRecuperado = sessionStorage.getItem('menu');
+        this.listTitles = JSON.parse(arregloRecuperado);
       
-        this.dataSharingService.getArrayData().subscribe(data => {
-            this.listTitles = data;
-          });
+        console.log('03- arreglo que llena los titulos : ' , this.listTitles );
         const navbar: HTMLElement = this.element.nativeElement;
         this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
-      
+
+        this.title = this.getTitle();
+        if(this.title === 'Informes'){
+            this.router.navigate(['/informes']);
+        }
+
+        console.log("poteeeeeeeeeeeencia",this.title);
+    
+
         this.myDataService.getStringData().subscribe((data: any) => {
+            console.log('03- al hacer click gatillo el llenado de setStringData : ' , data);
             let title = data.Nombre;
             this.showIcons = data.Nombre === "Usuarios" ? true : false;
         });
+
     }
 
     
@@ -74,22 +86,42 @@ export class NavbarComponent implements OnInit{
     };
 
     getTitle(){
-      var titlee = this.location.prepareExternalUrl(this.location.path());
-      if(titlee.charAt(0) === '#'){
-          titlee = titlee.slice( 1 );
+        var titlee = this.location.prepareExternalUrl(this.location.path());
+        console.log('04 estamos en el metodo getTitle : ' , titlee );
+        if(titlee.charAt(0) === '#'){
+            titlee = titlee.slice( 1 );
          
-      }
+        } 
 
-      for(var item = 0; item < this.listTitles.length; item++){
-          if(this.listTitles[item].Ruta === titlee){
-              return this.listTitles[item].Nombre;
-          }
-      }
-      return 'Mantenedor';
+        const isLoggedIn = sessionStorage.getItem('authToken'); 
+
+        let tokenDecode = this.authService.decodeToken(isLoggedIn);
+        console.log("tokenDecode : " , this.listTitles);
+        if(tokenDecode.role === 'Consulta'){
+       
+            for(let e of this.listTitles) {
+                if(e.Ruta === '/informes'){
+                   this.title =  e.Nombre;
+                  
+                    return this.title;
+                }
+               
+            }
+
+        }
+        else if(tokenDecode.role != 'Consulta'){
+        
+            for(var item = 0; item < this.listTitles.length; item++){
+                if(this.listTitles[item].Ruta === titlee){
+                    return this.listTitles[item].Nombre;
+                }
+            } 
+        }
     }
 
     logout(): void {
-        localStorage.removeItem('authToken');
+        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('menu');
     
         // Redirigir a la página de inicio de sesión
         this.router.navigate(['/login']);

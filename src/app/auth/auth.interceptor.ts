@@ -27,7 +27,9 @@ export class AuthInterceptor implements HttpInterceptor {
 
   private getToken(): string {
     // Recuperar el token de almacenamiento local o de algún servicio
-    return localStorage.getItem('authToken') || '';
+
+    return sessionStorage.getItem('authToken') || '';
+    
   }
 
   private handleError(error: HttpErrorResponse): void {

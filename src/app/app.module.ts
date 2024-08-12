@@ -14,6 +14,7 @@ import { AppComponent } from './app.component';
 import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.component';
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
+import { UserComponent } from './user/user.component';
 
 
 @NgModule({
@@ -33,6 +34,7 @@ import { AuthInterceptor } from './auth/auth.interceptor';
     AppComponent,
     AdminLayoutComponent,
     LoginComponent,
+    UserComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
