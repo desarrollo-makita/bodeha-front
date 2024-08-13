@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthGuard } from 'app/auth/auth.guard';
+import { User } from 'app/models/user.model';
+import { MyDataService } from 'app/services/data/my-data.service';
 import { UserService } from 'app/services/user/user.service';
 
 @Component({
@@ -14,19 +16,35 @@ export class UserComponent implements OnInit {
   userForm: FormGroup;
   successMessage: boolean = false;
   showOtherSelects = true;
+
+  nombre: any;
+  fechaVigencia :any;
+  rol: any;
+  apellido:any;
+  public vigencia: string = '';
   
   constructor(
     private authService: AuthGuard, 
     private router: Router, 
     private fb: FormBuilder,
-    private userService: UserService) { }
+    private userService: UserService,
+    private myDataService: MyDataService) { }
 
   ngOnInit() {
-    const token = localStorage.getItem('authToken');
+    const token = sessionStorage.getItem('authToken');
     if (token) {
       const decodedToken = this.authService.decodeToken(token);
-      
-      console.log(decodedToken);
+      this.myDataService.getUserObjectData().subscribe((data: User | null) => {
+  if (data) {
+    this.nombre  = data.Nombre;
+    this.apellido = data.Apellido;
+    this.rol = data.Rol;
+    this.vigencia = this.calcularVigencia(data.FechaInicio, data.FechaFin);
+    //this.fechaVigencia  = data
+    //this.rol: any;
+  }
+});
+
       if(decodedToken.role === 'Consulta'){
         this.router.navigate(['/informes']);
       }
@@ -60,8 +78,6 @@ export class UserComponent implements OnInit {
     if (this.userForm.valid) {
       const formData = this.userForm.value;
 
-      console.log("formData : " , formData);
-     
       const userData ={
         nombre : formData.nombre,
         apellido : formData.apellido,
@@ -78,7 +94,6 @@ export class UserComponent implements OnInit {
       // Suscribirse al observable devuelto por createUser
       this.userService.createUser(userData).subscribe(
       response => {
-        console.log('Usuario creado exitosamente', response);
         
         // Mostrar mensaje de éxito
         this.successMessage = true;
@@ -106,6 +121,19 @@ export class UserComponent implements OnInit {
   onRoleChange(event: Event): void {
     const selectedRole = (event.target as HTMLSelectElement).value;
     this.showOtherSelects = selectedRole !== 'Consulta';
+  }
+
+  calcularVigencia(fechaInicio: string, fechaFin: string): string {
+    const inicio = new Date(fechaInicio);
+    const fin = new Date(fechaFin);
+
+    // Calcular la diferencia en milisegundos
+    const diferenciaMs = fin.getTime() - inicio.getTime();
+
+    // Convertir a días (1000 ms * 60 seg * 60 min * 24 horas)
+    const diferenciaDias = diferenciaMs / (1000 * 60 * 60 * 24);
+
+    return `Vigencia hasta el ${fin.toLocaleDateString()} (${diferenciaDias} días)`;
   }
 
 }

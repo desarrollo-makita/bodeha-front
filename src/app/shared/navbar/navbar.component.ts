@@ -37,23 +37,30 @@ export class NavbarComponent implements OnInit{
         }
 
     ngOnInit(){
-        
-        const arregloRecuperado = sessionStorage.getItem('menu');
-        this.listTitles = JSON.parse(arregloRecuperado);
       
-        const navbar: HTMLElement = this.element.nativeElement;
-        this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
-
-        this.title = this.getTitle();
-        if(this.title === 'Informes'){
-            this.router.navigate(['/informes']);
-        }
-        this.showIcons = this.title === "Usuarios" ? true : false;
-
-        console.log("variables que setea : " , this.showIcons);
+        this.dataSharingService.getStringData().subscribe(menu => 
+            {
+                const ruta  = this.getTitle();
+                this.updateTitle(ruta);
+            });
         
-
+        const navbar: HTMLElement = this.element.nativeElement;
+        this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0]
+       
     }
+
+    updateTitle(title: string) {
+        if (title === '/user') {
+          this.title = 'Usuarios';
+          this.showIcons = true;
+        } else if (title === '/informes') {
+          this.title = 'Informes';
+          this.showIcons = false;
+        } else if (title === '/rol-mantenedor') {
+          this.title = 'Mantenedor de Area';
+          this.showIcons = false;
+        }
+      }
 
     
     sidebarOpen() {
@@ -84,36 +91,12 @@ export class NavbarComponent implements OnInit{
 
     getTitle(){
         var titlee = this.location.prepareExternalUrl(this.location.path());
-        console.log('04 estamos en el metodo getTitle : ' , titlee );
         if(titlee.charAt(0) === '#'){
             titlee = titlee.slice( 1 );
-         
         } 
 
-        const isLoggedIn = sessionStorage.getItem('authToken'); 
-
-        let tokenDecode = this.authService.decodeToken(isLoggedIn);
-        console.log("tokenDecode : " , this.listTitles);
-        console.log(tokenDecode.role != 'Consulta');
-        if(tokenDecode.role === 'Consulta'){
-            
-            for(let e of this.listTitles) {
-                if(e.Ruta === '/informes'){
-                   this.title =  e.Nombre;
-                  
-                    return this.title;
-                }
-               
-            }
-
-        }
-        else if(tokenDecode.role != 'Consulta'){
-            for(var item = 0; item < this.listTitles.length; item++){
-                if(this.listTitles[item].Ruta === titlee){
-                    return this.listTitles[item].Nombre;
-                }
-            } 
-        }
+        return titlee;
+       
     }
 
     logout(): void {

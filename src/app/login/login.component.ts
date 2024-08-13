@@ -16,7 +16,11 @@ export class LoginComponent implements OnInit {
   showMessage : boolean= false;
   isLoading: boolean = false;
 
-  constructor(private fb: FormBuilder , private router: Router , private loginService: LoginService, private dataService: MyDataService) {
+  constructor(
+    private fb: FormBuilder , 
+    private router: Router , 
+    private loginService: LoginService, 
+    private dataService: MyDataService) {
     this.loginForm = this.fb.group({
       usuario: ['', Validators.required],
       clave: ['', Validators.required],
@@ -45,8 +49,10 @@ export class LoginComponent implements OnInit {
           
           this.dataService.setArrayData(response.data.menu);
           
-          console.log('Login successful', response);
-          
+          console.log('Login successful');
+
+          this.dataService.setUserObjectData(response.data);
+
           if(response.data.Rol === 'Consulta'){
             this.router.navigate(['/informes']);
           }else if(response.data.Rol === 'Administrador'){

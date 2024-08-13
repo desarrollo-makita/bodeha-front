@@ -32,7 +32,7 @@ export class SidebarComponent implements OnInit {
 
     const arregloRecuperado = sessionStorage.getItem('menu');
     this.menuItems = JSON.parse(arregloRecuperado);
-    console.log("mrenuitems : " , this.menuItems);
+    
   }
 
   isMobileMenu() {

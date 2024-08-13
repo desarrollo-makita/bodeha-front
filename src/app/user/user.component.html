@@ -69,7 +69,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="password">Contraseña</label>
-                                        <input type="password" id="password" class="form-control" placeholder="Clave" formControlName="password">
+                                        <input type="password" id="password" class="form-control" placeholder="Clave" formControlName="password" autocomplete="current-password">
                                     </div>
                                 </div>
                                 <div class="col-md-3">
@@ -136,23 +136,14 @@
                     <div class="content">
                         <div class="author">
                             <a href="#">
-                                <img class="avatar border-gray" src="../../assets/img/perfil.PNG" alt="..."/>
+                                <img class="avatar border-gray" src="../../assets/img/new_logo.png" alt="..."/>
 
-                                <h4 class="title">Mike Andrew<br />
-                                    <small>michael24</small>
+                                <h4 class="title">{{apellido}}<br />
+                                    <small>{{nombre}}</small>
                                 </h4>
                             </a>
                         </div>
-                        <p class="description text-center"> "Lamborghini Mercy <br>
-                            Your chick she so thirsty <br>
-                            I'm in that two seat Lambo"
-                        </p>
-                    </div>
-                    <hr>
-                    <div class="text-center">
-                        <button href="#" class="btn btn-simple"><i class="fa fa-facebook-square"></i></button>
-                        <button href="#" class="btn btn-simple"><i class="fa fa-twitter"></i></button>
-                        <button href="#" class="btn btn-simple"><i class="fa fa-google-plus-square"></i></button>
+                        <p class="description text-center"> {{ vigencia }}</p> <br>
                     </div>
                 </div>
             </div>
