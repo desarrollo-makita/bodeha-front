@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 import { InformesComponent } from '../../informes/informes.component';
 import { UserComponent } from '../../user/user.component';
-import { UserEditComponent } from 'app/user-edit/user-edit/user-edit.component';
+import { UserEditComponent } from 'app/user-edit/user-edit.component';
 import { AreaMantenedorComponent } from 'app/area-mantenedor/area-mantenedor.component';
 
 
