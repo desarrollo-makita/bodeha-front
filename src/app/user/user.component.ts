@@ -26,6 +26,7 @@ export class UserComponent implements OnInit {
     if (token) {
       const decodedToken = this.authService.decodeToken(token);
       
+      console.log(decodedToken);
       if(decodedToken.role === 'Consulta'){
         this.router.navigate(['/informes']);
       }

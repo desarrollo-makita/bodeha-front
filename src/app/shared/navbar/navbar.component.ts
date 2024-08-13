@@ -19,6 +19,8 @@ export class NavbarComponent implements OnInit{
     showIcons: boolean;
     menuItems : any;
     title: string;
+    currentRoute: string = '';
+
     constructor(
         location: Location,  
         private element: ElementRef, 
@@ -31,6 +33,7 @@ export class NavbarComponent implements OnInit{
             this.location = location;
             this.sidebarVisible = false;
             this.showIcons = true;
+            
         }
 
     ngOnInit(){
@@ -38,7 +41,6 @@ export class NavbarComponent implements OnInit{
         const arregloRecuperado = sessionStorage.getItem('menu');
         this.listTitles = JSON.parse(arregloRecuperado);
       
-        console.log('03- arreglo que llena los titulos : ' , this.listTitles );
         const navbar: HTMLElement = this.element.nativeElement;
         this.toggleButton = navbar.getElementsByClassName('navbar-toggle')[0];
 
@@ -46,15 +48,10 @@ export class NavbarComponent implements OnInit{
         if(this.title === 'Informes'){
             this.router.navigate(['/informes']);
         }
+        this.showIcons = this.title === "Usuarios" ? true : false;
 
-        console.log("poteeeeeeeeeeeencia",this.title);
-    
-
-        this.myDataService.getStringData().subscribe((data: any) => {
-            console.log('03- al hacer click gatillo el llenado de setStringData : ' , data);
-            let title = data.Nombre;
-            this.showIcons = data.Nombre === "Usuarios" ? true : false;
-        });
+        console.log("variables que setea : " , this.showIcons);
+        
 
     }
 
@@ -97,8 +94,9 @@ export class NavbarComponent implements OnInit{
 
         let tokenDecode = this.authService.decodeToken(isLoggedIn);
         console.log("tokenDecode : " , this.listTitles);
+        console.log(tokenDecode.role != 'Consulta');
         if(tokenDecode.role === 'Consulta'){
-       
+            
             for(let e of this.listTitles) {
                 if(e.Ruta === '/informes'){
                    this.title =  e.Nombre;
@@ -110,7 +108,6 @@ export class NavbarComponent implements OnInit{
 
         }
         else if(tokenDecode.role != 'Consulta'){
-        
             for(var item = 0; item < this.listTitles.length; item++){
                 if(this.listTitles[item].Ruta === titlee){
                     return this.listTitles[item].Nombre;
@@ -125,5 +122,14 @@ export class NavbarComponent implements OnInit{
     
         // Redirigir a la página de inicio de sesión
         this.router.navigate(['/login']);
+    }
+
+
+    navigateToUserEdit() {
+        this.router.navigate(['/user-edit']);
+      }
+
+    navigateToUserCreate(){
+        this.router.navigate(['/user']);
     }
 }

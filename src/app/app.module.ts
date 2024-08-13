@@ -15,6 +15,8 @@ import { AdminLayoutComponent } from './layouts/admin-layout/admin-layout.compon
 import { LoginComponent } from './login/login.component';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { UserComponent } from './user/user.component';
+import { UserEditComponent } from './user-edit/user-edit/user-edit.component';
+import { AreaMantenedorComponent } from './area-mantenedor/area-mantenedor.component';
 
 
 @NgModule({
@@ -34,7 +36,9 @@ import { UserComponent } from './user/user.component';
     AppComponent,
     AdminLayoutComponent,
     LoginComponent,
-    UserComponent
+    UserComponent,
+    UserEditComponent,
+    AreaMantenedorComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

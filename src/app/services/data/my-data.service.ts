@@ -8,14 +8,16 @@ export class MyDataService {
 
   private dataSource = new BehaviorSubject<string>(''); // Valor inicial para string
   private arrayDataSource = new BehaviorSubject<any[]>([]); // Valor inicial para array
-
+  
   // Observables expuestos para suscribirse
   stringData$ = this.dataSource.asObservable();
   arrayData$ = this.arrayDataSource.asObservable();
+  
+
 
   constructor() { }
 
-  // Métodos para obtener los datos
+  // Métodos para obtener los datoS
   getStringData() {
     return this.stringData$;
   }
