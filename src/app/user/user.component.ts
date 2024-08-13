@@ -92,12 +92,11 @@ export class UserComponent implements OnInit {
       }
       
       // Suscribirse al observable devuelto por createUser
-      this.userService.createUser(userData).subscribe(
-      response => {
-        
-        // Mostrar mensaje de éxito
-        this.successMessage = true;
-          
+      this.userService.createUser(userData).subscribe({
+        next: (response) => {
+          // Mostrar mensaje de éxito
+          this.successMessage = true;
+
           // Limpiar el formulario
           this.userForm.reset();
 
@@ -105,13 +104,18 @@ export class UserComponent implements OnInit {
           setTimeout(() => {
             this.successMessage = false;
           }, 2000);
-      },
-      error => {
-        console.error('Error al crear el usuario', error);
-        // Lógica de manejo de errores
-      }
-    );
-    } else {
+        },
+        error: (error) => {
+          console.error('Error al crear el usuario', error);
+            // Lógica de manejo de errores
+        },
+        complete: () => {
+            console.log('Creación de usuario completada');
+            // Lógica adicional que desees ejecutar cuando la operación se complete
+        }
+      });
+
+    }else{
       // Marca todos los controles como tocados para mostrar errores
       this.userForm.markAllAsTouched();
     }

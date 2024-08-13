@@ -24,7 +24,7 @@
                                 <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="email">Email</label>
-                                        <input type="email" id="email" class="form-control" placeholder="ejemplo@makita.cl" formControlName="email">
+                                        <input type="email" id="email" class="form-control" placeholder="ejemplo@makita.cl" formControlName="email" autocomplete="email">
                                         <div *ngIf="userForm.get('email').invalid && userForm.get('email').touched" class="text-danger">
                                             Ingrese Email valido.
                                         </div>
