@@ -11,5 +11,6 @@ export interface User {
     NombreUsuario: string;
     Rol: string;
     UsuarioID: number;
+    Actividad: string;
   }
   

@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 })
 export class LoginService {
 
-  private apiUrl = 'http://localhost:3024/api/login';
+  private apiUrl = 'http://172.16.1.10:3024/api/login';
                      
 
   constructor(private http: HttpClient) { }

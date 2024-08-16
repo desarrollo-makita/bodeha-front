@@ -18,7 +18,7 @@
                                 <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="usuario">Usuario</label>
-                                        <input type="text" id="usuario" class="form-control" placeholder="Usuario" formControlName="usuario">
+                                        <input type="text" id="usuario" class="form-control" placeholder="Usuario" formControlName="usuario" readonly>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -33,16 +33,22 @@
                             </div>
 
                             <div class="row">
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="nombre">Nombre</label>
                                         <input id="nombre"type="text" class="form-control" placeholder="Nombre" value="" formControlName="nombre">
                                     </div>
                                 </div>
-                                <div class="col-md-6">
+                                <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="apellido">Apellido</label>
-                                        <input id="apellido" type="text" class="form-control" placeholder="Apellido" value="" formControlName="apellido">
+                                        <label for="apellidoPaterno">Apellido Paterno</label>
+                                        <input id="apellidoPaterno" type="text" class="form-control" placeholder="Apellido paterno" value="" formControlName="apellidoPaterno">
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="apellidoMaterno">Apellido Materno</label>
+                                        <input id="apellidoMaterno" type="text" class="form-control" placeholder="Apellido materno" value="" formControlName="apellidoMaterno">
                                     </div>
                                 </div>
                             </div>
@@ -123,6 +129,9 @@
                             <div *ngIf="successMessage" class="alert alert-success mt-3" role="alert">
                                 ¡Usuario creado con éxito!
                               </div>
+                              <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+                                ¡Error Usuario no creado!
+                              </div>
                             <div class="clearfix"></div>
                         </form>
                     </div>
@@ -136,7 +145,7 @@
                     <div class="content">
                         <div class="author">
                             <a href="#">
-                                <img class="avatar border-gray" src="../../assets/img/new_logo.png" alt="..."/>
+                                <img class="avatar border-gray" src="../../assets/img/perfilg.PNG" alt="..."/>
 
                                 <h4 class="title">{{apellido}}<br />
                                     <small>{{nombre}}</small>

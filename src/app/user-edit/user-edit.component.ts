@@ -1,7 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TableData } from 'app/models/tables.models';
+import { Router } from '@angular/router';
 import { User } from 'app/models/user.model';
 import { UserService } from 'app/services/user/user.service';
 
@@ -9,24 +9,26 @@ import { UserService } from 'app/services/user/user.service';
 @Component({
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
-  styleUrls: ['./user-edit.component.scss'],
+  styleUrls: ['./user-edit.component.css'],
   providers: [DatePipe]
 })
 export class UserEditComponent implements OnInit {
-  
-  userForm: FormGroup;
+  idUser: any;
+  userFormEdit: FormGroup;
   users:any =[];
   fecha:string;
   dataUser : User;
   showTableEdit:boolean = true;
   showFormUpdate:boolean = false;
   successMessage: boolean = false;
-  constructor(private userService: UserService, private fb: FormBuilder, ) {this.asignarFecha();}
+  errorMessage: boolean = false;
+  constructor(private userService: UserService, private fb: FormBuilder,private router: Router ,  ) {this.asignarFecha();}
 
   ngOnInit() {
     this.userService.getAllUser().subscribe({
       next: (response) => {
         this.users = response;
+        console.log("response : " , response , this.users);
       },
       error: (error) => {
         console.error('Error al obtener a los usuarios', error);
@@ -38,15 +40,14 @@ export class UserEditComponent implements OnInit {
       }
     });
 
-    this.userForm = this.fb.group({
+    this.userFormEdit = this.fb.group({
       usuario: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       fechaInicio: ['', Validators.required],
       fechaFin: ['', Validators.required],
-      password: ['', Validators.required],
-      usuarioActivo: [false, Validators.requiredTrue],
+      usuarioActivo: [''],
       role: ['', Validators.required],
       area: ['', Validators.required],
       actividad: ['', Validators.required]
@@ -70,6 +71,7 @@ export class UserEditComponent implements OnInit {
     this.dataUser = data;
     console.log('datauser: ' , this.dataUser);
 
+    this.idUser = this.dataUser.UsuarioID;
     const dataReq = {
        usuario: this.dataUser.NombreUsuario,
        email: this.dataUser.Email,
@@ -79,15 +81,71 @@ export class UserEditComponent implements OnInit {
        fechaFin: this.dataUser.FechaFin,
        usuarioActivo: this.dataUser.Estado,
        role: this.dataUser.Rol,
-       area: this.dataUser.Area
+       area: this.dataUser.Area,
+       actividad: this.dataUser.Actividad
     }
     
-    this.userForm.patchValue(dataReq);
+    this.userFormEdit.patchValue(dataReq);
     this.showTableEdit = false;
     this.showFormUpdate= true;
   }
 
   onEditSubmit() {
- 
+    let formData = this.userFormEdit.value;
+    formData.IdUsario = this.idUser;
+    this.userService.updateUser(formData).subscribe({
+      next: (response) => {
+        console.log("response:", response);
+
+        if(response.status != 200){
+          this.errorMessage =true;
+          // Limpiar el formulario
+          this.userFormEdit.reset();
+          
+        }else{
+          // Mostrar mensaje de éxito
+          this.successMessage = true;
+          
+          // Limpiar el formulario
+          this.userFormEdit.reset();
+        }
+
+        setTimeout(() => {
+          this.successMessage = false;
+          this.errorMessage = false;
+          this.showTableEdit = true;
+          this.showFormUpdate = false
+          // Opcional: Recargar la tabla con los datos actualizados
+          this.loadUsers();
+          
+        }, 2000);
+
+      },
+      error: (error) => {
+        console.error('Error al editar el usuario', error);
+          // Lógica de manejo de errores
+      },
+      complete: () => {
+          console.log('Edicion de usuario completada');
+          // Lógica adicional que desees ejecutar cuando la operación se complete
+      }
+    });
+  }
+
+  loadUsers(){
+    this.userService.getAllUser().subscribe({
+      next: (response) => {
+        this.users = response;
+        console.log("response22 : " , response , this.users);
+      },
+      error: (error) => {
+        console.error('Error al obtener a los usuarios', error);
+          // Lógica de manejo de errores
+      },
+      complete: () => {
+          console.log('Obtener usuarios completada');
+          // Lógica adicional que desees ejecutar cuando la operación se complete
+      }
+    });
   }
 }

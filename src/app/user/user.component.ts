@@ -5,6 +5,7 @@ import { AuthGuard } from 'app/auth/auth.guard';
 import { User } from 'app/models/user.model';
 import { MyDataService } from 'app/services/data/my-data.service';
 import { UserService } from 'app/services/user/user.service';
+import { format } from 'path';
 
 @Component({
   selector: 'app-user',
@@ -22,6 +23,7 @@ export class UserComponent implements OnInit {
   rol: any;
   apellido:any;
   public vigencia: string = '';
+  errorMessage: boolean = false;
   
   constructor(
     private authService: AuthGuard, 
@@ -32,18 +34,18 @@ export class UserComponent implements OnInit {
 
   ngOnInit() {
     const token = sessionStorage.getItem('authToken');
-    if (token) {
+    if(token) {
       const decodedToken = this.authService.decodeToken(token);
       this.myDataService.getUserObjectData().subscribe((data: User | null) => {
-  if (data) {
-    this.nombre  = data.Nombre;
-    this.apellido = data.Apellido;
-    this.rol = data.Rol;
-    this.vigencia = this.calcularVigencia(data.FechaInicio, data.FechaFin);
-    //this.fechaVigencia  = data
-    //this.rol: any;
-  }
-});
+    if(data) {
+      this.nombre  = data.Nombre;
+      this.apellido = data.Apellido;
+      this.rol = data.Rol;
+      this.vigencia = this.calcularVigencia(data.FechaInicio, data.FechaFin);
+      //this.fechaVigencia  = data
+      //this.rol: any;
+    }
+  });
 
       if(decodedToken.role === 'Consulta'){
         this.router.navigate(['/informes']);
@@ -55,7 +57,8 @@ export class UserComponent implements OnInit {
       usuario: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       nombre: ['', Validators.required],
-      apellido: ['', Validators.required],
+      apellidoPaterno: ['', Validators.required],
+      apellidoMaterno: ['', Validators.required],
       fechaInicio: ['', Validators.required],
       fechaFin: ['', Validators.required],
       password: ['', Validators.required],
@@ -65,9 +68,42 @@ export class UserComponent implements OnInit {
       actividad: ['', Validators.required]
     });
 
-    this.userForm.statusChanges.subscribe(status => {
-      console.log('Estado del formulario:', status);
+    this.userForm.get('nombre').valueChanges.subscribe(() => {
+      this.setUsuario();
     });
+    
+    this.userForm.get('apellidoPaterno').valueChanges.subscribe(() => {
+      this.setUsuario();
+    });
+  
+    this.userForm.get('apellidoMaterno').valueChanges.subscribe(() => {
+      this.setUsuario();
+    });
+  }
+
+  setUsuario(): void {
+    const nombre = this.userForm.get('nombre').value;
+    const apellidoPaterno = this.userForm.get('apellidoPaterno').value;
+    const apellidoMaterno = this.userForm.get('apellidoMaterno').value;
+  
+    if (nombre && apellidoPaterno) {
+      // Extraer la primera letra del nombre y el primer apellido
+      const primeraLetraNombre = nombre.trim().charAt(0).toLowerCase();
+      const primerApellido = apellidoPaterno.trim().split(' ')[0].toLowerCase();
+      let usuario = `${primeraLetraNombre}${primerApellido}`;
+  
+      // Llamar al servicio para verificar si el username existe
+      this.userService.usernameExists(usuario).subscribe(exists => {
+      
+        if (exists && apellidoMaterno) {
+          // Si ya existe y hay un segundo apellido, agregar la primera letra del apellido materno
+          const primeraLetraMaterno = apellidoMaterno.trim().charAt(0).toLowerCase();
+          usuario += primeraLetraMaterno;
+        }
+        // Establecer el valor del campo usuario
+        this.userForm.get('usuario').setValue(usuario);
+      });
+    }
   }
 
   onSwitchChange() {
@@ -80,29 +116,39 @@ export class UserComponent implements OnInit {
 
       const userData ={
         nombre : formData.nombre,
-        apellido : formData.apellido,
+        apellido: formData.apellidoPaterno + ' ' + formData.apellidoMaterno,
         email : formData.email,
         area : formData.area,
         rol: formData.role,
-        estado: formData.usuarioActivo ? "Activo" : "Inactivo",
+        estado: formData.usuarioActivo ? "true" : "false",
         fechaInicio : formData.fechaInicio ,
         fechaFin : formData.fechaFin,
         nombreUsuario :formData.usuario,
-        clave : formData.password
+        clave : formData.password,
+        actividad: formData.actividad
       }
       
       // Suscribirse al observable devuelto por createUser
       this.userService.createUser(userData).subscribe({
         next: (response) => {
-          // Mostrar mensaje de éxito
-          this.successMessage = true;
 
-          // Limpiar el formulario
-          this.userForm.reset();
+          if(response.status != 200){
+            this.errorMessage =true;
+            // Limpiar el formulario
+            this.userForm.reset();
+          }else{
+            // Mostrar mensaje de éxito
+            this.successMessage = true;
+
+            // Limpiar el formulario
+            this.userForm.reset();
+          }
+          
 
           // Ocultar el mensaje después de 2 segundos
           setTimeout(() => {
             this.successMessage = false;
+            this.errorMessage =false;
           }, 2000);
         },
         error: (error) => {
