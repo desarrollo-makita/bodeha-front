@@ -109,7 +109,9 @@ export class NavbarComponent implements OnInit{
 
 
     navigateToUserEdit() {
-        this.router.navigate(['/user-edit']);
+       
+        this.dataSharingService.setBooleanData(true);
+        this.router.navigate(['user/user-edit']);
       }
 
     navigateToUserCreate(){

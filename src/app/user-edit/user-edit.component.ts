@@ -3,7 +3,9 @@ import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { User } from 'app/models/user.model';
+import { MyDataService } from 'app/services/data/my-data.service';
 import { UserService } from 'app/services/user/user.service';
+
 
 
 @Component({
@@ -22,9 +24,15 @@ export class UserEditComponent implements OnInit {
   showFormUpdate:boolean = false;
   successMessage: boolean = false;
   errorMessage: boolean = false;
-  constructor(private userService: UserService, private fb: FormBuilder,private router: Router ,  ) {this.asignarFecha();}
+  constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService ) {this.asignarFecha();}
 
   ngOnInit() {
+
+    this.dataService.getBooleanData().subscribe(e => 
+      {
+        this.showTableEdit = e;
+      });
+    
     this.userService.getAllUser().subscribe({
       next: (response) => {
         this.users = response;
@@ -88,6 +96,29 @@ export class UserEditComponent implements OnInit {
     this.userFormEdit.patchValue(dataReq);
     this.showTableEdit = false;
     this.showFormUpdate= true;
+  }
+
+  deleteUser(data){
+    this.dataUser = data;
+   
+    this.idUser = this.dataUser.UsuarioID;
+    const dataReq = {
+       usuario: this.dataUser.NombreUsuario,
+       email: this.dataUser.Email,
+       nombre: this.dataUser.Nombre,
+       apellido: this.dataUser.Apellido,
+       fechaInicio: this.dataUser.FechaInicio,
+       fechaFin: this.dataUser.FechaFin,
+       usuarioActivo: this.dataUser.Estado,
+       role: this.dataUser.Rol,
+       area: this.dataUser.Area,
+       actividad: this.dataUser.Actividad,
+       action : 'delete'
+    }
+    console.log('dataReq: ' , dataReq);
+   
+    
+   
   }
 
   onEditSubmit() {

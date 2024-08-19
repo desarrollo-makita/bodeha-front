@@ -11,7 +11,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'informes',      component: InformesComponent },
     { path: 'user',           component: UserComponent },
     { path: 'rol-mantenedor', component: AreaMantenedorComponent },
-    { path: 'user-edit', component: UserEditComponent },
+    { path: 'user/user-edit', component: UserEditComponent },
 
 
    
