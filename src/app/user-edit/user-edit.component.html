@@ -47,11 +47,23 @@
                                 </tr>
                             </tbody>
                         </table>
+                        <div *ngIf="isLoading" id="loader">
+                            <img src="../../assets/img/loader-preview.svg" alt="loading">
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
+        <div *ngIf="successMessage" class="alert alert-success mt-3" role="alert">
+            ¡Usuario Eliminado con éxito!
+          </div>
+
+          
+          <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
+            ¡Error, Usuario no Eliminado!
+          </div>
     </div>
+   
 </div>
 <div class="main-content" *ngIf="showFormUpdate"> 
     <div class="container-fluid">

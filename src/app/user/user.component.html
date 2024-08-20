@@ -132,6 +132,9 @@
                               <div *ngIf="errorMessage" class="alert alert-danger" role="alert">
                                 ¡Error Usuario no creado!
                               </div>
+                              <div *ngIf="warningMessage"  class="alert alert-danger" role="alert">
+                                ¡El Usuario {{emailRespuesta}} ya se encuentra ingresado!
+                              </div>
                             <div class="clearfix"></div>
                         </form>
                     </div>

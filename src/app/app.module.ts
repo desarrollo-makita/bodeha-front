@@ -18,6 +18,12 @@ import { UserComponent } from './user/user.component';
 import { UserEditComponent } from './user-edit/user-edit.component';
 import { AreaMantenedorComponent } from './area-mantenedor/area-mantenedor.component';
 
+// Nuevas importaciones
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
+import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+
+
 
 @NgModule({
   imports: [
@@ -29,7 +35,10 @@ import { AreaMantenedorComponent } from './area-mantenedor/area-mantenedor.compo
     FooterModule,
     SidebarModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    MatDialogModule,  // Agregado para soporte de diálogos
+    MatButtonModule   // Agregado para botones en diálogos
+
   
   ],
   declarations: [
@@ -38,7 +47,8 @@ import { AreaMantenedorComponent } from './area-mantenedor/area-mantenedor.compo
     LoginComponent,
     UserComponent,
     UserEditComponent,
-    AreaMantenedorComponent
+    AreaMantenedorComponent,
+    ConfirmDialogComponent
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

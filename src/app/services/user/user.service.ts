@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -12,6 +12,7 @@ export class UserService {
   private getUser = 'http://172.16.1.10:3024/api/get-all-users';
   private updatetUser = 'http://172.16.1.10:3024/api/editar-usuarios';
   private getUserNameUrl = 'http://172.16.1.10:3024/api/get-nombre-usuario';
+  private deleteUserUrl = 'http://172.16.1.10:3024/api/delete-usuario';
                      
 
   constructor(private http: HttpClient) { }
@@ -25,7 +26,6 @@ export class UserService {
   }
 
   updateUser(dataEdit:any): Observable<any> {
-    console.log("dataEDit" , dataEdit);
     return this.http.put<any>(this.updatetUser, dataEdit);
   }
 
@@ -33,6 +33,12 @@ export class UserService {
   usernameExists(username: string): Observable<boolean> {
     const url = `${this.getUserNameUrl}?username=${username}`;
     return this.http.get<boolean>(url);
+  }
+
+  deleteUser(data: any): Observable<any> {
+    const params = new HttpParams({ fromObject: data });
+    const url = `${this.deleteUserUrl}`;
+    return this.http.delete<any>(url, { params });
   }
 
 }

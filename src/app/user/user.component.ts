@@ -24,6 +24,8 @@ export class UserComponent implements OnInit {
   apellido:any;
   public vigencia: string = '';
   errorMessage: boolean = false;
+  warningMessage: boolean = false;
+  emailRespuesta:any;
   
   constructor(
     private authService: AuthGuard, 
@@ -136,7 +138,10 @@ export class UserComponent implements OnInit {
             this.errorMessage =true;
             // Limpiar el formulario
             this.userForm.reset();
-          }else{
+          }else if(response.status === 200 && response.resul.output.Mensaje === 'Usuario ya ingresado'){
+            this.warningMessage = true;
+            this.emailRespuesta = response.resul.data.email;
+          }else if(response.status === 200 && response.resul.output.Mensaje === 'Success' ){
             // Mostrar mensaje de éxito
             this.successMessage = true;
 
@@ -149,6 +154,7 @@ export class UserComponent implements OnInit {
           setTimeout(() => {
             this.successMessage = false;
             this.errorMessage =false;
+            this.warningMessage = false;
           }, 2000);
         },
         error: (error) => {

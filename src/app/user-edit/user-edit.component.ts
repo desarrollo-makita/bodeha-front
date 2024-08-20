@@ -1,10 +1,12 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { User } from 'app/models/user.model';
 import { MyDataService } from 'app/services/data/my-data.service';
 import { UserService } from 'app/services/user/user.service';
+import { ConfirmDialogComponent } from 'app/shared/confirm-dialog/confirm-dialog.component';
 
 
 
@@ -24,7 +26,9 @@ export class UserEditComponent implements OnInit {
   showFormUpdate:boolean = false;
   successMessage: boolean = false;
   errorMessage: boolean = false;
-  constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService ) {this.asignarFecha();}
+  isLoading: boolean = false;
+
+  constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService, private dialog: MatDialog ) {this.asignarFecha();}
 
   ngOnInit() {
 
@@ -35,7 +39,7 @@ export class UserEditComponent implements OnInit {
     
     this.userService.getAllUser().subscribe({
       next: (response) => {
-        this.users = response;
+        this.users = response.data;
         console.log("response : " , response , this.users);
       },
       error: (error) => {
@@ -113,12 +117,50 @@ export class UserEditComponent implements OnInit {
        role: this.dataUser.Rol,
        area: this.dataUser.Area,
        actividad: this.dataUser.Actividad,
-       action : 'delete'
+       action : 'delete',
+       idUsuario: this.idUser
     }
-    console.log('dataReq: ' , dataReq);
    
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '350px',   // Ajusta el ancho según sea necesario
+      data: { user: dataReq.usuario },
+       enterAnimationDuration: '300ms',
+      exitAnimationDuration: '300ms'
+    });
     
-   
+    dialogRef.afterClosed().subscribe(result => {
+    
+      if (result) {
+      this.userService.deleteUser(dataReq).subscribe({
+          next: () => {
+            // Acción a realizar después de la eliminación exitosa
+           
+            this.successMessage= true;
+            this.isLoading = true;
+            setTimeout(() => {
+              this.successMessage = false;
+              this.errorMessage = false;
+              
+              this.loadUsers();
+              
+            }, 2000);
+            // Aquí podrías actualizar la lista de usuarios o redirigir a otra página
+          },
+          error: (err) => {
+            // Manejo de errores
+            console.error('Error al eliminar el usuario', err);
+          },
+          complete: () => {
+            // Acción a realizar cuando la eliminación se completa (opcional)
+            console.log('Eliminación de usuario completada');
+          }
+        });
+        
+      } else {
+        console.log('Eliminación cancelada');
+      }
+    });
+
   }
 
   onEditSubmit() {
@@ -166,15 +208,22 @@ export class UserEditComponent implements OnInit {
   loadUsers(){
     this.userService.getAllUser().subscribe({
       next: (response) => {
-        this.users = response;
-        console.log("response22 : " , response , this.users);
+        this.isLoading = true;
+        this.users = response.data;
+       
       },
       error: (error) => {
         console.error('Error al obtener a los usuarios', error);
+        if(error.status === 404){
+          this.isLoading = true;
+          this.users= [];
+          this.router.navigate(['/login']);
+        }
           // Lógica de manejo de errores
       },
       complete: () => {
           console.log('Obtener usuarios completada');
+          this.isLoading = false;
           // Lógica adicional que desees ejecutar cuando la operación se complete
       }
     });
