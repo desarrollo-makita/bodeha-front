@@ -26,6 +26,7 @@ export class UserComponent implements OnInit {
   errorMessage: boolean = false;
   warningMessage: boolean = false;
   emailRespuesta:any;
+  fechaFin:any;
   
   constructor(
     private authService: AuthGuard, 
@@ -38,16 +39,15 @@ export class UserComponent implements OnInit {
     const token = sessionStorage.getItem('authToken');
     if(token) {
       const decodedToken = this.authService.decodeToken(token);
-      this.myDataService.getUserObjectData().subscribe((data: User | null) => {
-    if(data) {
-      this.nombre  = data.Nombre;
-      this.apellido = data.Apellido;
-      this.rol = data.Rol;
-      this.vigencia = this.calcularVigencia(data.FechaInicio, data.FechaFin);
-      //this.fechaVigencia  = data
-      //this.rol: any;
-    }
-  });
+      this.myDataService.getUserObjectData().subscribe((data: User | null) => 
+      {
+        if(data) {
+          this.nombre  = data.Nombre;
+          this.apellido = data.Apellido;
+          this.rol = data.Rol;
+          this.vigencia = this.calcularVigencia(data.FechaInicio, data.FechaFin);
+        }
+      });
 
       if(decodedToken.role === 'Consulta'){
         this.router.navigate(['/informes']);
@@ -62,7 +62,6 @@ export class UserComponent implements OnInit {
       apellidoPaterno: ['', Validators.required],
       apellidoMaterno: ['', Validators.required],
       fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
       password: ['', Validators.required],
       usuarioActivo: [false, Validators.requiredTrue],
       role: ['', Validators.required],
@@ -81,6 +80,19 @@ export class UserComponent implements OnInit {
     this.userForm.get('apellidoMaterno').valueChanges.subscribe(() => {
       this.setUsuario();
     });
+
+    // Setear la fecha actual al cargar el componente
+    const today = new Date().toISOString().substring(0, 10); // Formato 'YYYY-MM-DD'
+    console.log(today);
+    this.userForm.get('fechaInicio')?.setValue(today);
+  
+    
+    const currentDate = new Date(); // Fecha actual
+    currentDate.setDate(currentDate.getDate() + 90); // Añade 90 días
+
+    // Convertir la fecha a formato 'YYYY-MM-DD'
+    const futureDate = currentDate.toISOString().substring(0, 10);
+    this.fechaFin = futureDate;
   }
 
   setUsuario(): void {
@@ -124,7 +136,7 @@ export class UserComponent implements OnInit {
         rol: formData.role,
         estado: formData.usuarioActivo ? "true" : "false",
         fechaInicio : formData.fechaInicio ,
-        fechaFin : formData.fechaFin,
+        fechaFin : this.fechaFin,
         nombreUsuario :formData.usuario,
         clave : formData.password,
         actividad: formData.actividad

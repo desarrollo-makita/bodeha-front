@@ -27,6 +27,7 @@ export class UserEditComponent implements OnInit {
   successMessage: boolean = false;
   errorMessage: boolean = false;
   isLoading: boolean = false;
+  fechaFin: any;
 
   constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService, private dialog: MatDialog ) {this.asignarFecha();}
 
@@ -58,12 +59,24 @@ export class UserEditComponent implements OnInit {
       nombre: ['', Validators.required],
       apellido: ['', Validators.required],
       fechaInicio: ['', Validators.required],
-      fechaFin: ['', Validators.required],
       usuarioActivo: [''],
       role: ['', Validators.required],
       area: ['', Validators.required],
       actividad: ['', Validators.required]
     });
+
+    // Setear la fecha actual al cargar el componente
+    const today = new Date().toISOString().substring(0, 10); // Formato 'YYYY-MM-DD'
+    console.log(today);
+    this.userFormEdit.get('fechaInicio')?.setValue(today);
+  
+    
+    const currentDate = new Date(); // Fecha actual
+    currentDate.setDate(currentDate.getDate() + 90); // Añade 90 días
+
+    // Convertir la fecha a formato 'YYYY-MM-DD'
+    const futureDate = currentDate.toISOString().substring(0, 10);
+    this.fechaFin = futureDate;
   }
 
   asignarFecha() {
@@ -81,21 +94,36 @@ export class UserEditComponent implements OnInit {
 
   editUser(data){
     this.dataUser = data;
-    console.log('datauser: ' , this.dataUser);
+    
+    console.log("this.dataUser : " , this.dataUser);
+    
+    const currentDate = new Date(); // Fecha actual
+    currentDate.setDate(currentDate.getDate() + 90); // Añade 90 días
+
+    // Convertir la fecha a formato 'YYYY-MM-DD'
+    const futureDate = currentDate.toISOString().substring(0, 10);
+    this.fechaFin = futureDate;
 
     this.idUser = this.dataUser.UsuarioID;
+
+    // Convertir las fechas de dataUser a formato 'YYYY-MM-DD'
+    const formattedFechaInicio = this.dataUser.FechaInicio.substring(0, 10); // 'YYYY-MM-DD'
+    const formattedFechaFin = this.fechaFin; // 'YYYY-MM-DD'
+    
     const dataReq = {
        usuario: this.dataUser.NombreUsuario,
        email: this.dataUser.Email,
        nombre: this.dataUser.Nombre,
        apellido: this.dataUser.Apellido,
-       fechaInicio: this.dataUser.FechaInicio,
-       fechaFin: this.dataUser.FechaFin,
+       fechaInicio: formattedFechaInicio,
+       fechaFin: formattedFechaFin,
        usuarioActivo: this.dataUser.Estado,
        role: this.dataUser.Rol,
        area: this.dataUser.Area,
        actividad: this.dataUser.Actividad
     }
+
+    console.log('datauser: ' , dataReq);
     
     this.userFormEdit.patchValue(dataReq);
     this.showTableEdit = false;
@@ -166,6 +194,8 @@ export class UserEditComponent implements OnInit {
   onEditSubmit() {
     let formData = this.userFormEdit.value;
     formData.IdUsario = this.idUser;
+    formData.fechaFin = this.fechaFin;
+    console.log("data para actualizar :  :" , formData);
     this.userService.updateUser(formData).subscribe({
       next: (response) => {
         console.log("response:", response);
