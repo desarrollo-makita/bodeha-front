@@ -22,6 +22,7 @@ import { AreaMantenedorComponent } from './area-mantenedor/area-mantenedor.compo
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 
 
@@ -37,7 +38,8 @@ import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.c
     AppRoutingModule,
     ReactiveFormsModule,
     MatDialogModule,  // Agregado para soporte de diálogos
-    MatButtonModule   // Agregado para botones en diálogos
+    MatButtonModule,  // Necesario para las animaciones de Angular Material
+    MatSlideToggleModule 
 
   
   ],

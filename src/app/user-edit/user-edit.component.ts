@@ -1,7 +1,8 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit , ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 import { Router } from '@angular/router';
 import { User } from 'app/models/user.model';
 import { MyDataService } from 'app/services/data/my-data.service';
@@ -14,6 +15,7 @@ import { ConfirmDialogComponent } from 'app/shared/confirm-dialog/confirm-dialog
   selector: 'app-user-edit',
   templateUrl: './user-edit.component.html',
   styleUrls: ['./user-edit.component.css'],
+  encapsulation: ViewEncapsulation.None,
   providers: [DatePipe]
 })
 export class UserEditComponent implements OnInit {
@@ -28,6 +30,7 @@ export class UserEditComponent implements OnInit {
   errorMessage: boolean = false;
   isLoading: boolean = false;
   fechaFin: any;
+  showCambioClave:boolean= false;
 
   constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService, private dialog: MatDialog ) {this.asignarFecha();}
 
@@ -257,5 +260,15 @@ export class UserEditComponent implements OnInit {
           // Lógica adicional que desees ejecutar cuando la operación se complete
       }
     });
+  }
+
+  onToggleChange(event: MatSlideToggleChange): void {
+  
+    // Aquí puedes implementar la lógica que necesitas cuando cambia el estado.
+    if (event.checked) {
+     this.showCambioClave = true;
+    } else {
+      this.showCambioClave = false;
+    }
   }
 }
