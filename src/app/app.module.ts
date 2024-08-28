@@ -23,6 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatIconModule } from '@angular/material/icon';
 
 
 
@@ -39,7 +40,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     ReactiveFormsModule,
     MatDialogModule,  // Agregado para soporte de diálogos
     MatButtonModule,  // Necesario para las animaciones de Angular Material
-    MatSlideToggleModule 
+    MatSlideToggleModule,
+    MatIconModule
+     
 
   
   ],

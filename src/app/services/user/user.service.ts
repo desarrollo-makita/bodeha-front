@@ -13,6 +13,7 @@ export class UserService {
   private updatetUser = 'http://172.16.1.10:3024/api/editar-usuarios';
   private getUserNameUrl = 'http://172.16.1.10:3024/api/get-nombre-usuario';
   private deleteUserUrl = 'http://172.16.1.10:3024/api/delete-usuario';
+  private claveActualUrl = 'http://172.16.1.10:3024/api/valida-clave-actual';
                      
 
   constructor(private http: HttpClient) { }
@@ -39,6 +40,10 @@ export class UserService {
     const params = new HttpParams({ fromObject: data });
     const url = `${this.deleteUserUrl}`;
     return this.http.delete<any>(url, { params });
+  }
+
+  claveActual(nombreUsuario: string, clave: string): Observable<any> {
+    return this.http.post<any>(this.claveActualUrl, { nombreUsuario, clave });
   }
 
 }

@@ -31,6 +31,9 @@ export class UserEditComponent implements OnInit {
   isLoading: boolean = false;
   fechaFin: any;
   showCambioClave:boolean= false;
+  usuario:string;
+  showOk:boolean = false;
+  showError:boolean = false;;
 
   constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService, private dialog: MatDialog ) {this.asignarFecha();}
 
@@ -127,7 +130,7 @@ export class UserEditComponent implements OnInit {
     }
 
     console.log('datauser: ' , dataReq);
-    
+    this.usuario= dataReq.usuario;
     this.userFormEdit.patchValue(dataReq);
     this.showTableEdit = false;
     this.showFormUpdate= true;
@@ -271,4 +274,33 @@ export class UserEditComponent implements OnInit {
       this.showCambioClave = false;
     }
   }
+
+
+  onBlur(event: FocusEvent) {
+    // Obtener el valor del campo de entrada
+    const inputElement = event.target as HTMLInputElement;
+    const value = inputElement.value;
+    
+    // Manejar el valor ingresado
+    console.log('Valor ingresado en Clave Actual:', value , this.usuario);
+    
+    this.userService.claveActual(this.usuario, value).subscribe({
+      next: response => {
+        
+       this.showOk = true;
+       this.showError = false;
+
+        
+      },
+      error: error => {
+    
+      this.showError = true;
+      this.showOk = false;
+      },
+      complete: () => {
+        
+      }
+    });
+  }
+
 }

@@ -27,6 +27,7 @@ export class UserComponent implements OnInit {
   warningMessage: boolean = false;
   emailRespuesta:any;
   fechaFin:any;
+  isLoading: boolean = false;
   
   constructor(
     private authService: AuthGuard, 
@@ -125,6 +126,7 @@ export class UserComponent implements OnInit {
   }
 
   onSubmit() {
+    this.isLoading = true;
     if (this.userForm.valid) {
       const formData = this.userForm.value;
 
@@ -145,7 +147,7 @@ export class UserComponent implements OnInit {
       // Suscribirse al observable devuelto por createUser
       this.userService.createUser(userData).subscribe({
         next: (response) => {
-
+         
           if(response.status != 200){
             this.errorMessage =true;
             // Limpiar el formulario
@@ -154,9 +156,10 @@ export class UserComponent implements OnInit {
             this.warningMessage = true;
             this.emailRespuesta = response.resul.data.email;
           }else if(response.status === 200 && response.resul.output.Mensaje === 'Success' ){
+            
             // Mostrar mensaje de éxito
             this.successMessage = true;
-
+            
             // Limpiar el formulario
             this.userForm.reset();
           }
@@ -171,11 +174,11 @@ export class UserComponent implements OnInit {
         },
         error: (error) => {
           console.error('Error al crear el usuario', error);
-            // Lógica de manejo de errores
+          
         },
         complete: () => {
             console.log('Creación de usuario completada');
-            // Lógica adicional que desees ejecutar cuando la operación se complete
+            this.isLoading = false;
         }
       });
 

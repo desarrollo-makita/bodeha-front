@@ -81,7 +81,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3" *ngIf="showOtherSelects">
+                                <div class="col-md-3">
                                     <div class="form-group">
                                         <label for="area">Area</label>
                                         <select id="area" class="form-control" formControlName="area" >
@@ -92,7 +92,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3" *ngIf="showOtherSelects">
+                                <div class="col-md-3">
                                     <div class="form-group" >
                                         <label for="actividad">Actividad</label>
                                         <select id="actividad" class="form-control" formControlName="actividad">
@@ -113,6 +113,9 @@
                                         </label>
                                     </div>
                                 </div>
+                            </div>
+                            <div *ngIf="isLoading" id="loader">
+                                <img src="../../assets/img/loader-preview.svg" alt="loading">
                             </div>
                             
                             <button type="submit" class="btn btn-info btn-fill pull-right" [disabled]="userForm.invalid">Guardar</button>

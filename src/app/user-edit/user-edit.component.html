@@ -187,7 +187,12 @@
                                         <label class="negrita" for="claveActual">Clave Actual</label>
                                     </div>
                                     <div class="col-md-3" *ngIf="showCambioClave">
-                                        <input id="claveActual" type="text" class="form-control">
+                                        <input id="claveActual" name="claveActual" type="text" class="form-control"  (blur)="onBlur($event)">
+                                    </div>
+                                    <div class="col-md-1" *ngIf="showCambioClave">
+                                        <!-- Ícono para mostrar si la clave es válida o no -->
+                                        <mat-icon *ngIf="showOk" style="color: #00909E;">check_circle</mat-icon>
+                                        <mat-icon *ngIf="showError" color="warn">cancel</mat-icon>
                                     </div>
                                 </div>
                                 
@@ -210,10 +215,10 @@
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-1">
-                                        <label class="negrita" for="nuevaClave">Confirmar Clave</label>
+                                        <label class="negrita" for="confirmarClave">Confirmar Clave</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <input id="nuevaClave" type="text" class="form-control">
+                                        <input id="confirmarClave" type="text" class="form-control">
                                     </div>
                                 </div>
                                 
