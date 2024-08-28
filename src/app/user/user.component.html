@@ -9,13 +9,13 @@
                     <div class="content">
                         <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
                             <div class="row">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="empresa">Empresa</label>
                                         <input id="empresa" type="text" class="form-control" disabled placeholder="Makita" value="Makita">
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="usuario">Usuario</label>
                                         <input type="text" id="usuario" class="form-control" placeholder="Usuario" formControlName="usuario" readonly>
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="fechaInicio">Fecha de Ingreso</label>
                                         <input type="date" id="fechaInicio" class="form-control" disabled placeholder="Fecha de Inicio" formControlName="fechaInicio">
@@ -66,13 +66,7 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group">
-                                        <label for="password">Contraseña</label>
-                                        <input type="password" id="password" class="form-control" placeholder="Clave" formControlName="password" autocomplete="current-password">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="role">Rol</label>
                                         <select id="role" class="form-control" formControlName="role" (change)="onRoleChange($event)">
@@ -81,7 +75,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group">
                                         <label for="area">Area</label>
                                         <select id="area" class="form-control" formControlName="area" >
@@ -92,7 +86,7 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-3">
+                                <div class="col-md-4">
                                     <div class="form-group" >
                                         <label for="actividad">Actividad</label>
                                         <select id="actividad" class="form-control" formControlName="actividad">
@@ -104,9 +98,11 @@
                                     </div>
                                 </div>
                             </div>
+                            <app-password-strength (passwordValid)="isPasswordValid = $event"></app-password-strength>
+                          
                             <div class="row">
-                                <div class="checkbox col-md-3">
-                                    <div class="form-group">
+                                <div class="checkbox col-md-4">
+                                    <div class="form-group"  style = "padding-top: 25%;">
                                         <input id="usuarioActivo" type="checkbox" formControlName="usuarioActivo">
                                         <label for="usuarioActivo">
                                           Activo

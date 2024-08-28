@@ -28,7 +28,7 @@ export class UserComponent implements OnInit {
   emailRespuesta:any;
   fechaFin:any;
   isLoading: boolean = false;
-  
+  isPasswordValid: boolean = false;
   constructor(
     private authService: AuthGuard, 
     private router: Router, 
