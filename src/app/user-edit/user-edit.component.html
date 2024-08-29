@@ -184,7 +184,7 @@
                                
                                 <div class="form-group">
                                     <div class="col-md-1" *ngIf="showCambioClave">
-                                        <label class="negrita" for="claveActual">Clave Actual</label>
+                                        <label for="claveActual">Clave Actual</label>
                                     </div>
                                     <div class="col-md-3" *ngIf="showCambioClave">
                                         <input id="claveActual" name="claveActual" type="text" class="form-control"  (blur)="onBlur($event)">
@@ -198,27 +198,80 @@
                                 
                             </div>
                             <div class="row" *ngIf="showCambioClave">
-                                <div class="col-md-3">
+                                <div class="col-md-3" style="margin-top: -3%;" >
+                                  <!-- Contenedor para la barra de progreso de fortaleza de la contraseña -->
+                                  <div class="password-strength-indicator">
+                                    <span [ngClass]="strengthClass">{{ passwordStrength }}</span>
+                                  </div>
+                                  <div class="progress">
+                                    <div
+                                      class="progress-bar"
+                                      [ngClass]="progressBarClass"
+                                      role="progressbar" 
+                                      [style.width]="progressBarWidth + '%'" 
+                                      aria-valuenow="progressBarWidth" 
+                                      aria-valuemin="0" 
+                                      aria-valuemax="100"
+                                    ></div>
+                                  </div>
                                 </div>
                                 <div class="form-group">
-                                    <div class="col-md-1">
-                                        <label class="negrita" for="nuevaClave">Nueva Clave</label>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <input id="nuevaClave" type="text" class="form-control">
-                                    </div>
+                                  <div class="col-md-1">
+                                    <label for="nuevaClave">Nueva Clave</label>
+                                  </div>
+                                  <div class="col-md-3">
+                                    <input
+                                      [type]="showPassword ? 'text' : 'password'"
+                                      id="nuevaClave"
+                                      (input)="onPasswordInput($event.target.value)"
+                                      class="form-control"
+                                      [disabled]="!isFieldEnabled"
+                                    />
+                                  </div>
+                                  <div class="col-md-5">
+                                    <ul class="password-criteria">
+                                      <li [class.valid]="hasUpperCase">
+                                        Debe contener al menos una <strong>mayúscula</strong>
+                                      </li>
+                                      <li [class.valid]="hasSpecialCharacter">
+                                        Debe contener al menos un <strong>carácter especial</strong>
+                                      </li>
+                                      <li [class.valid]="hasNumber">
+                                        Debe contener al menos un <strong>número</strong>
+                                      </li>
+                                      <li [class.valid]="hasMinLength">
+                                        Debe tener al menos <strong>8 caracteres</strong>
+                                      </li>
+                                    </ul>
+                                  </div>
                                 </div>
-                                
-                            </div>
+                              </div>
+                              
                             <div class="row" *ngIf="showCambioClave">
                                 <div class="col-md-3">
                                 </div>
                                 <div class="form-group">
                                     <div class="col-md-1">
-                                        <label class="negrita" for="confirmarClave">Confirmar Clave</label>
+                                        <label  for="confirmarClave">Confirmar Clave</label>
                                     </div>
                                     <div class="col-md-3">
-                                        <input id="confirmarClave" type="text" class="form-control">
+                                        <input 
+                                            id="confirmarClave" 
+                                            type="password" 
+                                            class="form-control"  
+                                            [disabled]="showConfirmaClave"
+                                            (input)="confirmarClave($event.target.value)">
+                                    </div>
+                                    <div class="col-md-2" *ngIf="showCambioClave">
+                                        <div class="d-flex align-items-center justify-content-start" style="gap: 10px;">
+                                            <!-- Ícono para mostrar si la clave es válida o no -->
+                                            <mat-icon *ngIf="showConfirmarClave" style="color: #00909E; ">check_circle</mat-icon>
+                                            <mat-icon *ngIf="showErrorClave" style="color: #FF0000; ">cancel</mat-icon>
+                                            
+                                            <!-- Texto al lado del ícono -->
+                                            <span *ngIf="showConfirmarClave" style="color: #00909E; font-weight: bold; font-size: 12px;">Clave válida</span>
+                                            <span *ngIf="showErrorClave" style="color: #FF0000; font-weight: bold; font-size: 12px;">Las claves no coinciden</span>
+                                          </div>
                                     </div>
                                 </div>
                                 

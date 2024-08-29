@@ -33,7 +33,31 @@ export class UserEditComponent implements OnInit {
   showCambioClave:boolean= false;
   usuario:string;
   showOk:boolean = false;
-  showError:boolean = false;;
+  showError:boolean = false;
+  showConfirmarClave :boolean = false;
+  showErrorClave :boolean = false;
+
+  //Variables que validan nueva clave
+  password: string = '';
+  hasUpperCase: boolean = false;
+  hasSpecialCharacter: boolean = false;
+  hasMinLength: boolean = false;
+  hasNumber: boolean = false;
+  claveActual:string;
+  confirmarPassword:string;
+
+  passwordStrength: string = '';
+  strengthClass: string = '';
+
+  private onChange: any = () => {};
+  private onTouched: any = () => {};
+
+  showPassword: boolean = false;
+  isFieldEnabled: boolean = false;
+  showConfirmaClave:boolean= false;
+
+  progressBarClass: string = '';
+  progressBarWidth: number = 0;
 
   constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService, private dialog: MatDialog ) {this.asignarFecha();}
 
@@ -68,7 +92,8 @@ export class UserEditComponent implements OnInit {
       usuarioActivo: [''],
       role: ['', Validators.required],
       area: ['', Validators.required],
-      actividad: ['', Validators.required]
+      actividad: ['', Validators.required],
+      password: ['', Validators.required]
     });
 
     // Setear la fecha actual al cargar el componente
@@ -289,6 +314,7 @@ export class UserEditComponent implements OnInit {
         
        this.showOk = true;
        this.showError = false;
+       this.isFieldEnabled = true;
 
         
       },
@@ -296,11 +322,71 @@ export class UserEditComponent implements OnInit {
     
       this.showError = true;
       this.showOk = false;
+      this.isFieldEnabled = false;
       },
       complete: () => {
         
       }
     });
+  }
+
+  onPasswordInput(password: string) {
+    console.log("password : " , password);
+    this.password = password;
+    this.hasUpperCase = /[A-Z]/.test(this.password);
+    this.hasSpecialCharacter = /[\W_]/.test(this.password);  // Carácter especial
+    this.hasMinLength = this.password.length >= 8;
+    this.hasNumber = /\d/.test(this.password);  // Verifica que contenga un número
+
+    this.calculateStrength();
+    this.onChange(this.password); // Notifica al formulario reactivo del cambio
+    this.onTouched(); // Marca el control como tocado
+    this.claveActual = this.password;
+    if (this.hasUpperCase && this.hasSpecialCharacter && this.hasMinLength && this.hasNumber) {
+      this.showConfirmaClave = false // Establece el valor si la contraseña es válida
+    } else {
+      this.showConfirmaClave = true; // Establece otro valor si la contraseña no es válida
+    }
+  }
+
+  confirmarClave(password: string) {
+    console.log("password : " , password);
+    this.password = password;
+    this.confirmarPassword = this.password;
+    console.log("confirmarPassword : " , this.confirmarPassword);
+    this.comparaClave( this.claveActual, this.confirmarPassword);
+  }
+
+  calculateStrength() {
+    const strengthPoints = [this.hasUpperCase, this.hasSpecialCharacter, this.hasMinLength, this.hasNumber].filter(Boolean).length;
+
+    if (strengthPoints <= 1) {
+        this.passwordStrength = 'Clave Débil';
+        this.progressBarClass = 'bg-danger'; // Rojo para clave débil
+        this.progressBarWidth = 25; // 25% de ancho
+        this.strengthClass = 'weak'; // Clase para clave débil
+    } else if (strengthPoints === 2 || strengthPoints === 3) {
+        this.passwordStrength = 'Clave Media';
+        this.progressBarClass = 'bg-warning'; // Amarillo para clave media
+        this.progressBarWidth = 50; // 50% de ancho
+        this.strengthClass = 'medium'; // Clase para clave media
+    } else {
+        this.passwordStrength = 'Clave Fuerte';
+        this.progressBarClass = 'bg-success'; // Verde para clave fuerte
+        this.progressBarWidth = 100; // 100% de ancho
+        this.strengthClass = 'strong'; // Clase para clave fuerte
+    }
+}
+  comparaClave(nuevaClave , confirmarClave){
+    if(nuevaClave === confirmarClave){
+      this.showConfirmarClave = true;
+      this.showErrorClave = false;
+    }else {
+      this.showErrorClave = true;
+      this.showConfirmarClave =  false;
+    }
+    console.log("01",nuevaClave , "02",confirmarClave);  
+  
   }
 
 }

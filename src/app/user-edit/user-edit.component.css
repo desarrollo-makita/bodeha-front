@@ -153,3 +153,87 @@ select.form-control:focus {
 }
 
 
+/* Estilops de nueva Clave : */
+.password-criteria {
+  list-style: none; /* Elimina los puntos predeterminados del navegador */
+  padding-left: 0; /* Elimina el relleno izquierdo por defecto */
+}
+
+.password-criteria li {
+  position: relative;
+  padding-left: 20px; /* Espacio para el punto antes del texto */
+  margin-bottom: 5px; /* Espacio entre los elementos */
+}
+
+.password-criteria li::before {
+  content: '•'; /* Punto antes del texto */
+  color: red; /* Color del punto, puedes ajustarlo según tus preferencias */
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 16px; /* Tamaño del punto, puedes ajustarlo según tus preferencias */
+  line-height: 1;
+}
+
+.password-criteria li.valid::before {
+  color: #00909E; /* Cambia el color del punto cuando el criterio es válido */
+}
+
+.password-criteria li.invalid::before {
+  color: red; /* Cambia el color del punto cuando el criterio no es válido */
+}
+
+.password-criteria {
+  list-style-type: none;
+  padding: 0;
+  font-size: 12px; /* Ajuste de tamaño para ser más compacto */
+}
+
+.password-criteria li {
+  color: red;
+  margin-bottom: 5px;
+}
+
+.password-criteria li.valid {
+  color: #00909E;
+  font-weight: bold;
+}
+
+.progress {
+  margin-top: 10px;
+}
+
+/* Color para las barras de progreso */
+.bg-danger {
+  background-color: #dc3545 !important; /* Rojo */
+}
+
+.bg-warning {
+  background-color: #ffc107 !important; /* Amarillo */
+}
+
+.bg-success {
+  background-color: #28a745 !important; /* Verde */
+}
+
+.password-strength-indicator {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+.password-strength-indicator .weak {
+  color: red;
+}
+
+.password-strength-indicator .medium {
+  color: orange;
+}
+
+.password-strength-indicator .strong {
+  color: #00909E;
+}
+
+.progress-bar {
+  transition: width 0.3s ease, background-color 0.3s ease; /* Suaviza el cambio en el ancho y color */
+
+}

@@ -40,15 +40,12 @@ export class UserComponent implements OnInit {
     const token = sessionStorage.getItem('authToken');
     if(token) {
       const decodedToken = this.authService.decodeToken(token);
-      this.myDataService.getUserObjectData().subscribe((data: User | null) => 
-      {
-        if(data) {
-          this.nombre  = data.Nombre;
-          this.apellido = data.Apellido;
-          this.rol = data.Rol;
-          this.vigencia = this.calcularVigencia(data.FechaInicio, data.FechaFin);
-        }
-      });
+      console.log("decodetoken" , decodedToken);
+      
+      this.nombre  = decodedToken.username;
+      this.apellido = decodedToken.apellido;
+      this.rol = decodedToken.role;
+      this.vigencia = this.calcularVigencia(decodedToken.fechaInicio, decodedToken.fechaFin);
 
       if(decodedToken.role === 'Consulta'){
         this.router.navigate(['/informes']);
