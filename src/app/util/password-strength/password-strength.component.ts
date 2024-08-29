@@ -22,6 +22,7 @@ export class PasswordStrengthComponent {
   hasSpecialCharacter: boolean = false;
   hasMinLength: boolean = false;
   hasNumber: boolean = false;
+  showBarra:boolean= false;
 
   passwordStrength: string = '';
   strengthClass: string = '';
@@ -31,32 +32,49 @@ export class PasswordStrengthComponent {
 
   showPassword: boolean = false;
 
+  progressBarClass: string = '';
+  progressBarWidth: number = 0;
+
 
   onPasswordInput(password: string) {
+   
     this.password = password;
-    this.hasUpperCase = /[A-Z]/.test(this.password);
-    this.hasSpecialCharacter = /[\W_]/.test(this.password);  // Carácter especial
-    this.hasMinLength = this.password.length >= 8;
-    this.hasNumber = /\d/.test(this.password);  // Verifica que contenga un número
+    console.log("contando : " ,this.password.length );
+    if (this.password.length === 0) {
+      this.showBarra = false;
+    }else{
+      this.showBarra = true;
+      this.hasUpperCase = /[A-Z]/.test(this.password);
+      this.hasSpecialCharacter = /[\W_]/.test(this.password);  // Carácter especial
+      this.hasMinLength = this.password.length >= 8;
+      this.hasNumber = /\d/.test(this.password);  // Verifica que contenga un número
 
-    this.calculateStrength();
-    this.passwordValid.emit(this.passwordStrength === 'Fuerte');
-    this.onChange(this.password); // Notifica al formulario reactivo del cambio
-    this.onTouched(); // Marca el control como tocado
+      this.calculateStrength();
+      this.onChange(this.password); // Notifica al formulario reactivo del cambio
+      this.onTouched(); // Marca el control como tocado
+    
+    }
+    
   }
 
   calculateStrength() {
     const strengthPoints = [this.hasUpperCase, this.hasSpecialCharacter, this.hasMinLength, this.hasNumber].filter(Boolean).length;
 
     if (strengthPoints <= 1) {
-      this.passwordStrength = 'Clave Débil';
-      this.strengthClass = 'weak';
+        this.passwordStrength = 'Clave Débil';
+        this.progressBarClass = 'bg-danger'; // Rojo para clave débil
+        this.progressBarWidth = 25; // 25% de ancho
+        this.strengthClass = 'weak'; // Clase para clave débil
     } else if (strengthPoints === 2 || strengthPoints === 3) {
-      this.passwordStrength = 'Clave Media';
-      this.strengthClass = 'medium';
+        this.passwordStrength = 'Clave Media';
+        this.progressBarClass = 'bg-warning'; // Amarillo para clave media
+        this.progressBarWidth = 50; // 50% de ancho
+        this.strengthClass = 'medium'; // Clase para clave media
     } else {
-      this.passwordStrength = 'Clave Fuerte';
-      this.strengthClass = 'strong';
+        this.passwordStrength = 'Clave Fuerte';
+        this.progressBarClass = 'bg-success'; // Verde para clave fuerte
+        this.progressBarWidth = 100; // 100% de ancho
+        this.strengthClass = 'strong'; // Clase para clave fuerte
     }
   }
 

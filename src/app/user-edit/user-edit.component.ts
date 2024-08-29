@@ -376,7 +376,7 @@ export class UserEditComponent implements OnInit {
         this.progressBarWidth = 100; // 100% de ancho
         this.strengthClass = 'strong'; // Clase para clave fuerte
     }
-}
+  }
   comparaClave(nuevaClave , confirmarClave){
     if(nuevaClave === confirmarClave){
       this.showConfirmarClave = true;
