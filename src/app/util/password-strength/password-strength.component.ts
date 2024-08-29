@@ -1,12 +1,21 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, forwardRef, Output } from '@angular/core';
+import { FormControl, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-password-strength',
   templateUrl: './password-strength.component.html',
-  styleUrls: ['./password-strength.component.scss']
+  styleUrls: ['./password-strength.component.scss'],
+  providers: [
+    {
+      provide: NG_VALUE_ACCESSOR,
+      useExisting: forwardRef(() => PasswordStrengthComponent),
+      multi: true
+    }
+  ]
 })
 export class PasswordStrengthComponent {
   @Output() passwordValid = new EventEmitter<boolean>();
+  passwordControl: FormControl = new FormControl('');
 
   password: string = '';
   hasUpperCase: boolean = false;
@@ -17,6 +26,12 @@ export class PasswordStrengthComponent {
   passwordStrength: string = '';
   strengthClass: string = '';
 
+  private onChange: any = () => {};
+  private onTouched: any = () => {};
+
+  showPassword: boolean = false;
+
+
   onPasswordInput(password: string) {
     this.password = password;
     this.hasUpperCase = /[A-Z]/.test(this.password);
@@ -26,6 +41,8 @@ export class PasswordStrengthComponent {
 
     this.calculateStrength();
     this.passwordValid.emit(this.passwordStrength === 'Fuerte');
+    this.onChange(this.password); // Notifica al formulario reactivo del cambio
+    this.onTouched(); // Marca el control como tocado
   }
 
   calculateStrength() {
@@ -41,5 +58,23 @@ export class PasswordStrengthComponent {
       this.passwordStrength = 'Clave Fuerte';
       this.strengthClass = 'strong';
     }
+  }
+
+  // Métodos de ControlValueAccessor
+  writeValue(value: any): void {
+    this.password = value || '';
+    this.onPasswordInput(this.password);
+  }
+
+  registerOnChange(fn: any): void {
+    this.onChange = fn;
+  }
+
+  registerOnTouched(fn: any): void {
+    this.onTouched = fn;
+  }
+
+  toggleShowPassword() {
+    this.showPassword = !this.showPassword;
   }
 }
