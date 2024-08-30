@@ -39,7 +39,6 @@ export class PasswordStrengthComponent {
   onPasswordInput(password: string) {
    
     this.password = password;
-    console.log("contando : " ,this.password.length );
     if (this.password.length === 0) {
       this.showBarra = false;
     }else{

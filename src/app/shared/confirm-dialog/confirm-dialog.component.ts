@@ -13,7 +13,7 @@ export class ConfirmDialogComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    console.log("dalogRef : " , this.dialogRef);
+   
   }
 
   onNoClick(): void {

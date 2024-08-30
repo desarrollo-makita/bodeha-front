@@ -73,7 +73,7 @@ export class UserEditComponent implements OnInit {
     this.userService.getAllUser().subscribe({
       next: (response) => {
         this.users = response.data;
-        console.log("response : " , response , this.users);
+       
       },
       error: (error) => {
         console.error('Error al obtener a los usuarios', error);
@@ -95,12 +95,13 @@ export class UserEditComponent implements OnInit {
       role: ['', Validators.required],
       area: ['', Validators.required],
       actividad: ['', Validators.required],
+      password: [{ value: '', disabled: true }]
       
     });
 
     // Setear la fecha actual al cargar el componente
     const today = new Date().toISOString().substring(0, 10); // Formato 'YYYY-MM-DD'
-    console.log(today);
+    
     this.userFormEdit.get('fechaInicio')?.setValue(today);
   
     
@@ -128,8 +129,6 @@ export class UserEditComponent implements OnInit {
   editUser(data){
     this.dataUser = data;
     
-    console.log("this.dataUser : " , this.dataUser);
-    
     const currentDate = new Date(); // Fecha actual
     currentDate.setDate(currentDate.getDate() + 90); // Añade 90 días
 
@@ -156,7 +155,6 @@ export class UserEditComponent implements OnInit {
        actividad: this.dataUser.Actividad
     }
 
-    console.log('datauser: ' , dataReq);
     this.usuario= dataReq.usuario;
     this.userFormEdit.patchValue(dataReq);
     this.showTableEdit = false;
@@ -228,11 +226,9 @@ export class UserEditComponent implements OnInit {
     let formData = this.userFormEdit.value;
     formData.IdUsario = this.idUser;
     formData.fechaFin = this.fechaFin;
-    console.log("data para actualizar :  :" , formData);
+    
     this.userService.updateUser(formData).subscribe({
       next: (response) => {
-        console.log("response:", response);
-
         if(response.status != 200){
           this.errorMessage =true;
           // Limpiar el formulario
@@ -241,7 +237,6 @@ export class UserEditComponent implements OnInit {
         }else{
           // Mostrar mensaje de éxito
           this.successMessage = true;
-          
           // Limpiar el formulario
           this.userFormEdit.reset();
         }
@@ -307,24 +302,20 @@ export class UserEditComponent implements OnInit {
     // Obtener el valor del campo de entrada
     const inputElement = event.target as HTMLInputElement;
     const value = inputElement.value;
-    
-    // Manejar el valor ingresado
-    console.log('Valor ingresado en Clave Actual:', value , this.usuario);
-    
     this.userService.claveActual(this.usuario, value).subscribe({
       next: response => {
         
        this.showOk = true;
        this.showError = false;
        this.isFieldEnabled = true;
-
+       this.userFormEdit.get('password')?.enable();
         
       },
       error: error => {
     
       this.showError = true;
       this.showOk = false;
-      this.isFieldEnabled = false;
+      this.userFormEdit.get('password')?.disable();
       },
       complete: () => {
         
@@ -333,7 +324,7 @@ export class UserEditComponent implements OnInit {
   }
 
   onPasswordInput(password: string) {
-    console.log("password : " , password);
+   
     this.password = password;
     this.hasUpperCase = /[A-Z]/.test(this.password);
     this.hasSpecialCharacter = /[\W_]/.test(this.password);  // Carácter especial
@@ -352,10 +343,10 @@ export class UserEditComponent implements OnInit {
   }
 
   confirmarClave(password: string) {
-    console.log("password : " , password);
+   
     this.password = password;
     this.confirmarPassword = this.password;
-    console.log("confirmarPassword : " , this.confirmarPassword);
+    
     this.comparaClave( this.claveActual, this.confirmarPassword);
   }
 
@@ -387,7 +378,7 @@ export class UserEditComponent implements OnInit {
       this.showErrorClave = true;
       this.showConfirmarClave =  false;
     }
-    console.log("01",nuevaClave , "02",confirmarClave);  
+   
   
   }
 

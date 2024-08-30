@@ -40,7 +40,6 @@ export class UserComponent implements OnInit {
     const token = sessionStorage.getItem('authToken');
     if(token) {
       const decodedToken = this.authService.decodeToken(token);
-      console.log("decodetoken" , decodedToken);
       
       this.nombre  = decodedToken.username;
       this.apellido = decodedToken.apellido;
@@ -81,7 +80,7 @@ export class UserComponent implements OnInit {
 
     // Setear la fecha actual al cargar el componente
     const today = new Date().toISOString().substring(0, 10); // Formato 'YYYY-MM-DD'
-    console.log(today);
+
     this.userForm.get('fechaInicio')?.setValue(today);
   
     
@@ -118,9 +117,6 @@ export class UserComponent implements OnInit {
     }
   }
 
-  onSwitchChange() {
-    console.log('Switch estado:', this.isActive);
-  }
 
   onSubmit() {
     this.isLoading = true;
