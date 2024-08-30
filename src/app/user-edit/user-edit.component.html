@@ -207,10 +207,11 @@
                                   <div class="col-md-3">
                                     <input
                                       [type]="showPassword ? 'text' : 'password'"
-                                      id="nuevaClave"
+                                      id="password"
                                       (input)="onPasswordInput($event.target.value)"
                                       class="form-control"
                                       [disabled]="!isFieldEnabled"
+                                     
                                     />
                                     
                                     <!-- Contenedor para la barra de progreso de fortaleza de la contraseña -->
@@ -247,7 +248,7 @@
                                     </ul>
                                   </div>
                                 </div>
-                              </div>
+                            </div>
                               
                             <div class="row" *ngIf="showCambioClave">
                                 <div class="col-md-3">
@@ -261,7 +262,7 @@
                                             id="confirmarClave" 
                                             type="password" 
                                             class="form-control"  
-                                            [disabled]="showConfirmaClave"
+                                            [disabled]="!showConfirmaClave"
                                             (input)="confirmarClave($event.target.value)">
                                     </div>
                                     <div class="col-md-2" *ngIf="showCambioClave">

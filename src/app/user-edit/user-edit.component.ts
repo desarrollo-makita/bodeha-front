@@ -54,6 +54,7 @@ export class UserEditComponent implements OnInit {
 
   showPassword: boolean = false;
   isFieldEnabled: boolean = false;
+  
   showConfirmaClave:boolean= false;
 
   progressBarClass: string = '';
@@ -62,7 +63,8 @@ export class UserEditComponent implements OnInit {
   constructor(private userService: UserService, private fb: FormBuilder,private router: Router , private dataService : MyDataService, private dialog: MatDialog ) {this.asignarFecha();}
 
   ngOnInit() {
-
+    
+    
     this.dataService.getBooleanData().subscribe(e => 
       {
         this.showTableEdit = e;
@@ -93,7 +95,7 @@ export class UserEditComponent implements OnInit {
       role: ['', Validators.required],
       area: ['', Validators.required],
       actividad: ['', Validators.required],
-      password: ['', Validators.required]
+      
     });
 
     // Setear la fecha actual al cargar el componente
@@ -343,9 +345,9 @@ export class UserEditComponent implements OnInit {
     this.onTouched(); // Marca el control como tocado
     this.claveActual = this.password;
     if (this.hasUpperCase && this.hasSpecialCharacter && this.hasMinLength && this.hasNumber) {
-      this.showConfirmaClave = false // Establece el valor si la contraseña es válida
+      this.showConfirmaClave = true // Establece el valor si la contraseña es válida
     } else {
-      this.showConfirmaClave = true; // Establece otro valor si la contraseña no es válida
+      this.showConfirmaClave = false; // Establece otro valor si la contraseña no es válida
     }
   }
 
