@@ -45,7 +45,9 @@
                       placeholder="ejemplo@makita.cl"
                       formControlName="email"
                       autocomplete="email"
+                      disabled
                     />
+                    
                     <div
                       *ngIf="
                         userForm.get('email').invalid &&
@@ -142,10 +144,11 @@
                       id="area"
                       class="form-control"
                       formControlName="area"
+                      (change)="onAreaChange($event)"
                     >
                       <option value="herramientas">Herramientas</option>
                       <option value="accesorios">Accesorios</option>
-                      <option value="inventario">Almacenamiento</option>
+                      <option value="recepcion">Recepcion</option>
                       <option value="ubicacion">Repuestos</option>
                     </select>
                   </div>

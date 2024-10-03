@@ -21,6 +21,10 @@
                         [disabled]="loginForm.invalid">Ingresar</button>
                 </div>
                 <br>
+                <div class="text-center mt-3">
+                   
+                    <a href="#" (click)="openDialog($event)" class="link-primary">Recuperar contraseña</a>
+                </div>
                 <!-- Mostrar el mensaje de error si existe -->
                 <div *ngIf="errorMessage" class="alert alert-danger text-center">
                     {{ errorMessage }}

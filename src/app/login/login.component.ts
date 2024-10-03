@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { MyDataService } from 'app/services/data/my-data.service';
 import { LoginService } from 'app/services/login/login.service';
+import { PasswordRecoveryDialogComponent } from 'app/shared/password-recovery-dialog/password-recovery-dialog.component';
 
 @Component({
   selector: 'app-login',
@@ -20,7 +22,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder , 
     private router: Router , 
     private loginService: LoginService, 
-    private dataService: MyDataService) {
+    private dataService: MyDataService,
+    public dialog: MatDialog) {
     this.loginForm = this.fb.group({
       usuario: ['', Validators.required],
       clave: ['', Validators.required],
@@ -85,5 +88,16 @@ export class LoginComponent implements OnInit {
     }
   }
 
- 
+  openDialog(event: Event): void {
+    event.preventDefault();  // Evita la navegación predeterminada
+    const dialogRef = this.dialog.open(PasswordRecoveryDialogComponent, {
+    });
+  
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('El diálogo se cerró');
+    });
+  }
 }
+
+ 
+

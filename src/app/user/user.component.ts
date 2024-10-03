@@ -29,6 +29,7 @@ export class UserComponent implements OnInit {
   fechaFin: any;
   isLoading: boolean = false;
   isPasswordValid: boolean = false;
+  emailCreacion: string;
   constructor(
     private authService: AuthGuard,
     private router: Router,
@@ -217,5 +218,38 @@ export class UserComponent implements OnInit {
       .split(" ") // Divide el texto en palabras
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitaliza la primera letra de cada palabra
       .join(" "); // Une las palabras nuevamente en una cadena
+  }
+
+
+  onAreaChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    console.log('Valor seleccionado (evento):', selectElement.value);
+    
+    const opcion = selectElement.value;
+
+    switch (opcion) {
+      case 'herramientas':
+        this.userForm.get("email")?.setValue("herramientas@makita.cl");
+        break;
+
+      case 'accesorios':
+        this.userForm.get("email")?.setValue("accesorios@makita.cl");
+        break;
+
+      case 'recepcion':
+        this.userForm.get("email")?.setValue("recepcion@makita.cl");
+        break;
+
+      case 'repuestos':
+        this.userForm.get("email")?.setValue("repuestos@makita.cl");
+        break;
+
+      default:
+        console.log('Valor no manejado');
+        break;
+    }
+    
+   
+  
   }
 }
