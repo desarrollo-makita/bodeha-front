@@ -125,3 +125,17 @@
 .color-text{
   color: #00909E;
 }
+
+.alert-success {
+  border-radius: 4px !important;
+  background-color: #00909e !important;
+  color: #fff !important;
+  text-align: center;
+}
+
+.alert-danger{
+  border-radius: 4px !important;
+  background-color: #FF4A55 !important;
+  color: #fff !important;
+  text-align: center;
+}

@@ -13,6 +13,7 @@ export class UserService {
   private deleteUserUrl = "http://172.16.1.112:3024/api/delete-usuario";
   private claveActualUrl = "http://172.16.1.112:3024/api/valida-clave-actual";
   private recuperarClaveUrl = "http://172.16.1.112:3024/api/recuperar-password";
+  private replaceClaveUrl = "http://172.16.1.112:3024/api/replace-password-id";
 
   constructor(private http: HttpClient) {}
 
@@ -46,6 +47,10 @@ export class UserService {
 
   recuperarClave(usuario: string): Observable<any> {
     return this.http.post<any>(this.recuperarClaveUrl, { usuario});
+  }
+
+  replacePassword(data: any): Observable<any> {
+    return this.http.put<any>(this.replaceClaveUrl, { data});
   }
 
 

@@ -1,7 +1,7 @@
 <h2 mat-dialog-title class="dialog-title">
     Cambiar clave provisoria
-    <button mat-icon-button class="close-button">
-      <mat-icon>close</mat-icon>
+    <button mat-icon-button class="close-button" (click)="onClose()">
+      <mat-icon >close</mat-icon>
     </button>
   </h2>
   
@@ -44,10 +44,6 @@
             <li [ngClass]="{'valid': showVeryfiPassword, 'invalid': !showVeryfiPassword}">
               Las claves coinciden
             </li>
-              
-              
-       
-           
           </ul>
         </mat-card-content>
       </mat-card>
@@ -60,4 +56,12 @@
       [ngClass]="{'enabled': showVeryfiPassword, 'disabled': !showVeryfiPassword}"  
       (click)="enviaCambioClave()">Enviar</button>
   </mat-dialog-actions>
+  <br>
+  <br>
+  <div  *ngIf="showMensajeFinal" class="alert alert-success" role="alert">
+    Cambio de clave exitoso!!
+  </div>
+  <div *ngIf="showMensajeFinalError" class="alert alert-danger" role="alert">
+    Error al cambiar la clave!
+  </div>
   
