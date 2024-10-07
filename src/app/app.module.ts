@@ -24,10 +24,12 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormFieldModule } from '@angular/material/form-field';  // Agregado para mat-form-field
 import { MatInputModule } from '@angular/material/input';  // Agregado para matInput
+import { MatCardModule } from '@angular/material/card'; // Agregado para mat-card
 
 import { ConfirmDialogComponent } from './shared/confirm-dialog/confirm-dialog.component';
 import { PasswordStrengthComponent } from './util/password-strength/password-strength.component';
 import { PasswordRecoveryDialogComponent } from './shared/password-recovery-dialog/password-recovery-dialog.component';
+import { ReplaceTemporaryKeyComponent } from './shared/replace-temporary-key/replace-temporary-key.component';
 
 @NgModule({
   imports: [
@@ -46,6 +48,7 @@ import { PasswordRecoveryDialogComponent } from './shared/password-recovery-dial
     MatIconModule,       // Para íconos
     MatFormFieldModule,  // Para usar mat-form-field
     MatInputModule,      // Para usar matInput
+    MatCardModule,       // Para usar mat-card
   ],
   declarations: [
     AppComponent,
@@ -56,7 +59,8 @@ import { PasswordRecoveryDialogComponent } from './shared/password-recovery-dial
     AreaMantenedorComponent,
     ConfirmDialogComponent,
     PasswordStrengthComponent,
-    PasswordRecoveryDialogComponent
+    PasswordRecoveryDialogComponent,
+    ReplaceTemporaryKeyComponent,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
