@@ -7,21 +7,21 @@
   
   <mat-dialog-content>
     <mat-form-field>
-      <mat-label>Clave provisoria</mat-label>
-      <input matInput (input)="onInputChange($event)" [(ngModel)]="passwordTemporal">
+      <mat-label class="color-text">Clave provisoria</mat-label>
+      <input matInput (input)="onInputChange($event)" [(ngModel)]="passwordTemporal" class="color-text">
     </mat-form-field>
     
     <mat-icon matSuffix *ngIf="showCheckVerify"   class="icon-checked">check_circle</mat-icon>
 
     
     <mat-form-field>
-      <mat-label >Nueva Clave</mat-label>
-      <input matInput [disabled]="!showCheckVerify" (input)="onPasswordInput($event.target.value)">
+      <mat-label class="color-text" >Nueva Clave</mat-label>
+      <input matInput [disabled]="!showCheckVerify" (input)="onPasswordInput($event.target.value)" class="color-text">
     </mat-form-field>
     <mat-icon matSuffix *ngIf="showInfoClave"   class="icon-checked">check_circle</mat-icon>
     
     <mat-form-field>
-      <mat-label>Repetir Clave</mat-label>
+      <mat-label class="color-text">Repetir Clave</mat-label>
       <input matInput [disabled]="!showInfoClave" (input)="confirmarCLave($event.target.value)">
     </mat-form-field>
     <mat-icon matSuffix *ngIf="showVeryfiPassword"   class="icon-checked">check_circle</mat-icon>
