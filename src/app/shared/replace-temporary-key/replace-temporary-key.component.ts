@@ -23,11 +23,19 @@ export class ReplaceTemporaryKeyComponent implements OnInit {
   showMensajeFinal: boolean = false;
   showMensajeFinalError: boolean = false;
 
+  key:string;
 
-  constructor(public dialogRef: MatDialogRef<ReplaceTemporaryKeyComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: any , private userService : UserService , private authService: AuthGuard,) { 
+
+  constructor(
+    public dialogRef: MatDialogRef<ReplaceTemporaryKeyComponent>,
+    @Inject(MAT_DIALOG_DATA) 
+    public data: any , 
+    private userService : UserService , 
+    private authService: AuthGuard,) { 
+      
+      console.log("eeeeeeeeeeeeeeeeeeeeeeeeeeeeee : " , data);
       this.claveTemporal = data.claveTemporal;
-      console.log('Clave temporal recibida:', this.claveTemporal);
+      this.key =  data.token;
     }
 
   ngOnInit(): void {
@@ -73,6 +81,8 @@ export class ReplaceTemporaryKeyComponent implements OnInit {
   }
 
   enviaCambioClave(){
+
+    sessionStorage.setItem('authToken', this.key);
     const token = sessionStorage.getItem("authToken");
 
     const decodedToken = this.authService.decodeToken(token);

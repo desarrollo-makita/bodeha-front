@@ -7,6 +7,7 @@ import { LoginService } from 'app/services/login/login.service';
 import { PasswordRecoveryDialogComponent } from 'app/shared/password-recovery-dialog/password-recovery-dialog.component';
 import { ReplaceTemporaryKeyComponent } from 'app/shared/replace-temporary-key/replace-temporary-key.component';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -26,8 +27,9 @@ export class LoginComponent implements OnInit {
     private router: Router , 
     private loginService: LoginService, 
     private dataService: MyDataService,
-    public dialog: MatDialog) {
-    this.loginForm = this.fb.group({
+    public dialog: MatDialog ) {
+    
+      this.loginForm = this.fb.group({
       usuario: ['', Validators.required],
       clave: ['', Validators.required],
      
@@ -51,8 +53,6 @@ export class LoginComponent implements OnInit {
       this.loginService.login(usuario, clave).subscribe({
         next: response => {
          
-          // Guarda el token en el localStorage
-          sessionStorage.setItem('authToken', response.data.token);
           
           // Guarda el token en el localStorage
           sessionStorage.setItem('menu', JSON.stringify(response.data.menu));
@@ -64,9 +64,13 @@ export class LoginComponent implements OnInit {
           this.dataService.setUserObjectData(response.data);
           if(response.data.recuperarClave ===  1){
             console.log("responseeeeeeee : " , response.data);
-              this.openDialogReplaceKey('1300ms', '1300ms' , this.claveProvisoria);
+            response.data.claveTemporal = this.claveProvisoria;
+              this.openDialogReplaceKey('1300ms', '1300ms' , response.data);
             
           }else{
+            // Guarda el token en el localStorage
+            sessionStorage.setItem('authToken', response.data.token);
+          
             if(response.data.Rol === 'Consulta'){
               this.router.navigate(['/informes']);
             }else if(response.data.Rol === 'Administrador'){
@@ -111,22 +115,24 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  openDialogReplaceKey(enterAnimationDuration: string, exitAnimationDuration: string , claveTemporal : string): void {
+  openDialogReplaceKey(enterAnimationDuration: string, exitAnimationDuration: string , data : any ): void {
     this.showLogin = false;
-    console.log("claveTemporaql : " , claveTemporal);
+   
     const dialogRef = this.dialog.open(ReplaceTemporaryKeyComponent, {
       width: '350px',
       enterAnimationDuration,
       exitAnimationDuration,
-      data: { claveTemporal },
+      data: data ,
     });
   
     dialogRef.afterClosed().subscribe(result => {
       console.log('El diálogo se cerró');
       this.showLogin = true;
+     
     });
   }
 }
+
 
  
 

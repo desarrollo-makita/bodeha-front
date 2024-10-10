@@ -30,7 +30,7 @@ modal:boolean= false;
           this.modal = true;
           this.esError = false;
           this.showMensaje = true;
-          this.mensajeUsuario = "Se ha enviado clave a su correo";
+          this.mensajeUsuario = "Se ha enviado una clave temporal a su correo";
         }else{
           this.esError = true;
           this.showMensaje = true;
