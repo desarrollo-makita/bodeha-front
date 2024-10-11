@@ -48,7 +48,13 @@
   }
   
   .form-group label {
-    font-weight: bold; /* Hace que el texto sea más grueso */
+    font-weight: 400; /* Hace que el texto sea más grueso */
     margin-bottom: 5px; /* Añade un espaciado inferior */
     color: #00909E; /* Cambia el color del texto del label */
   }
+
+    .title{
+      color: #00909E;
+      font-weight: 400;
+    }
+  

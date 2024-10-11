@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthGuard } from "app/auth/auth.guard";
 import { User } from "app/models/user.model";
+import { AreaService } from "app/services/areas-services/area-service";
 import { MyDataService } from "app/services/data/my-data.service";
 import { UserService } from "app/services/user/user.service";
 import { format } from "path";
@@ -30,15 +31,19 @@ export class UserComponent implements OnInit {
   isLoading: boolean = false;
   isPasswordValid: boolean = false;
   emailCreacion: string;
+  areas: any[] = [];
   constructor(
     private authService: AuthGuard,
     private router: Router,
     private fb: FormBuilder,
     private userService: UserService,
-    private myDataService: MyDataService
+    private myDataService: MyDataService,
+    private areaService: AreaService
   ) {}
 
   ngOnInit() {
+
+    this.loadAreas();
     const token = sessionStorage.getItem("authToken");
     if (token) {
       const decodedToken = this.authService.decodeToken(token);
@@ -90,6 +95,9 @@ export class UserComponent implements OnInit {
     // Convertir la fecha a formato 'YYYY-MM-DD'
     const futureDate = currentDate.toISOString().substring(0, 10);
     this.fechaFin = futureDate;
+
+    
+
   }
 
   setUsuario(): void {
@@ -228,19 +236,19 @@ export class UserComponent implements OnInit {
     const opcion = selectElement.value;
 
     switch (opcion) {
-      case 'herramientas':
+      case 'Herramientas':
         this.userForm.get("email")?.setValue("herramientas@makita.cl");
         break;
 
-      case 'accesorios':
+      case 'Accesorios':
         this.userForm.get("email")?.setValue("accesorios@makita.cl");
         break;
 
-      case 'recepcion':
+      case 'Recepcion':
         this.userForm.get("email")?.setValue("recepcion@makita.cl");
         break;
 
-      case 'repuestos':
+      case 'Repuestos':
         this.userForm.get("email")?.setValue("repuestos@makita.cl");
         break;
 
@@ -251,5 +259,20 @@ export class UserComponent implements OnInit {
     
    
   
+  }
+
+  loadAreas(){
+    this.areaService.getAllareas().subscribe({
+      next: (response) => {
+        this.areas = response.data;
+      },
+      error: (error) => {
+        console.error("Error al consultar las areas", error);
+      },
+      complete: () => {
+        console.log("obtencion de Areas compeltada");
+       
+      },
+    });
   }
 }

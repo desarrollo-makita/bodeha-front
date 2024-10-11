@@ -1,9 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-
-declare interface TableData {
-  headerRow: string[];
-  dataRows: string[][];
-}
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
+import { AreaService } from 'app/services/areas-services/area-service';
+import { ConfirmDialogComponent } from 'app/shared/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-area-mantenedor',
@@ -11,35 +10,108 @@ declare interface TableData {
   styleUrls: ['./area-mantenedor.component.scss']
 })
 export class AreaMantenedorComponent implements OnInit {
-  public tableData1: TableData;
-  public tableData2: TableData;
 
-constructor() { }
+  areas:[]=[];
+  idArea:any;
+  nombreArea: string;
+  areaForm: FormGroup;
 
-ngOnInit() {
-    this.tableData1 = {
-        headerRow: [ 'ID', 'Name', 'Country', 'City', 'Salary'],
-        dataRows: [
-            ['1', 'Dakota Rice', 'Niger', 'Oud-Turnhout', '$36,738'],
-            ['2', 'Minerva Hooper', 'Curaçao', 'Sinaai-Waas', '$23,789'],
-            ['3', 'Sage Rodriguez', 'Netherlands', 'Baileux', '$56,142'],
-            ['4', 'Philip Chaney', 'Korea, South', 'Overland Park', '$38,735'],
-            ['5', 'Doris Greene', 'Malawi', 'Feldkirchen in Kärnten', '$63,542'],
-            ['6', 'Mason Porter', 'Chile', 'Gloucester', '$78,615']
-        ]
+  constructor(private areaService: AreaService,private dialog: MatDialog , private fb: FormBuilder) { 
+
+    this.areaForm = this.fb.group({
+      area: ['', Validators.required] // campo requerido
+    });
+  }
+
+  ngOnInit() {
+    this.loadAreas();
+      
+  }
+
+
+  loadAreas(){
+    this.areaService.getAllareas().subscribe({
+      next: (response) => {
+        this.areas = response.data;
+      },
+      error: (error) => {
+        console.error("Error al consultar las areas", error);
+      },
+      complete: () => {
+        console.log("obtencion de Areas compeltada");
+      
+      },
+    });
+  }
+
+  deleteArea(data) {
+  
+    console.log("data : " ,data);
+    this.idArea = data.Id;
+    this.nombreArea= data.Nombre;
+
+    const dataReq = {
+      nombre: this.nombreArea,
+      action: "delete",
+      idArea: this.idArea,
     };
-    this.tableData2 = {
-        headerRow: [ 'ID', 'Name',  'Salary', 'Country', 'City' ],
-        dataRows: [
-            ['1', 'Dakota Rice','$36,738', 'Niger', 'Oud-Turnhout' ],
-            ['2', 'Minerva Hooper', '$23,789', 'Curaçao', 'Sinaai-Waas'],
-            ['3', 'Sage Rodriguez', '$56,142', 'Netherlands', 'Baileux' ],
-            ['4', 'Philip Chaney', '$38,735', 'Korea, South', 'Overland Park' ],
-            ['5', 'Doris Greene', '$63,542', 'Malawi', 'Feldkirchen in Kärnten', ],
-            ['6', 'Mason Porter', '$78,615', 'Chile', 'Gloucester' ]
-        ]
-    };
-}
 
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: "350px", // Ajusta el ancho según sea necesario,
+      data: { user: dataReq.nombre },
+      enterAnimationDuration: "300ms",
+      exitAnimationDuration: "300ms",
+    });
+
+    dialogRef.afterClosed().subscribe((result) => {
+      if (result) {
+        this.areaService.deleteUser(dataReq).subscribe({
+          next: () => {
+            this.loadAreas();
+
+          
+          },
+          error: (err) => {
+            // Manejo de errores
+            console.error("Error al eliminar el area", err);
+          },
+          complete: () => {
+            // Acción a realizar cuando la eliminación se completa (opcional)
+            console.log("Eliminación de area completada");
+          },
+        });
+      } else {
+        console.log("Eliminación cancelada");
+      }
+    });
+  }
+
+  onSubmit() {
+    if (this.areaForm.valid) {
+      const areaName = this.areaForm.value.area; // obtiene el valor del campo 'area'
+      console.log('Área enviada:', areaName);
+
+
+      const dataArea = {
+        nombre : areaName
+      }
+      this.areaService.insertarArea(dataArea).subscribe({
+        next: (response) => {
+         console.log("response : " , response);
+        },
+        error: (error) => {
+          console.error("Error al consultar las areas", error);
+        },
+        complete: () => {
+          this.loadAreas();
+          
+          // Limpiar el formulario
+          this.areaForm.reset();
+
+        
+        },
+      });
+    }
+  }
 }
 

@@ -146,10 +146,7 @@
                       formControlName="area"
                       (change)="onAreaChange($event)"
                     >
-                      <option value="herramientas">Herramientas</option>
-                      <option value="accesorios">Accesorios</option>
-                      <option value="recepcion">Recepcion</option>
-                      <option value="ubicacion">Repuestos</option>
+                      <option *ngFor="let area of areas" [value]="area.Nombre">{{ area.Nombre }}</option>
                     </select>
                   </div>
                 </div>
