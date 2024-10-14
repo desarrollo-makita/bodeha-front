@@ -1,8 +1,9 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { AuthGuard } from "app/auth/auth.guard";
 import { User } from "app/models/user.model";
+import { ActividadService } from "app/services/actividad-services/actividad-service";
 import { AreaService } from "app/services/areas-services/area-service";
 import { MyDataService } from "app/services/data/my-data.service";
 import { UserService } from "app/services/user/user.service";
@@ -32,13 +33,18 @@ export class UserComponent implements OnInit {
   isPasswordValid: boolean = false;
   emailCreacion: string;
   areas: any[] = [];
+
+  selectedActivities: any[] = [];
+  actividadList: any[] = [];
+  
   constructor(
     private authService: AuthGuard,
     private router: Router,
     private fb: FormBuilder,
     private userService: UserService,
     private myDataService: MyDataService,
-    private areaService: AreaService
+    private areaService: AreaService,
+    private actividadService: ActividadService
   ) {}
 
   ngOnInit() {
@@ -69,7 +75,8 @@ export class UserComponent implements OnInit {
       usuarioActivo: [false, Validators.requiredTrue],
       role: ["", Validators.required],
       area: ["", Validators.required],
-      actividad: ["", Validators.required],
+      actividades: this.fb.array([], Validators.required) // FormArray para checkboxes
+      
     });
 
     this.userForm.get("nombre").valueChanges.subscribe(() => {
@@ -96,6 +103,7 @@ export class UserComponent implements OnInit {
     const futureDate = currentDate.toISOString().substring(0, 10);
     this.fechaFin = futureDate;
 
+    this.loadActividades();
     
 
   }
@@ -132,6 +140,7 @@ export class UserComponent implements OnInit {
     if (this.userForm.valid) {
       const formData = this.userForm.value;
 
+      console.log("formData" , formData);
       const userData = {
         nombre: formData.nombre,
         apellido: formData.apellidoPaterno + " " + formData.apellidoMaterno,
@@ -143,26 +152,27 @@ export class UserComponent implements OnInit {
         fechaFin: this.fechaFin,
         nombreUsuario: formData.usuario,
         clave: formData.password,
-        actividad: formData.actividad,
+        actividad: formData.actividades
       };
 
       console.log("creacion de usaurio:", userData);
       // Suscribirse al observable devuelto por createUser
       this.userService.createUser(userData).subscribe({
         next: (response) => {
+          console.log("******************",response)
           if (response.status != 200) {
             this.errorMessage = true;
             // Limpiar el formulario
             this.userForm.reset();
           } else if (
             response.status === 200 &&
-            response.resul.output.Mensaje === "Usuario ya ingresado"
+            response.resul.output.StatusID === 1
           ) {
             this.warningMessage = true;
             this.emailRespuesta = response.resul.data.email;
           } else if (
             response.status === 200 &&
-            response.resul.output.Mensaje === "Success"
+            response.resul.output.StatusID === 0
           ) {
             // Mostrar mensaje de éxito
             this.successMessage = true;
@@ -271,6 +281,47 @@ export class UserComponent implements OnInit {
       },
       complete: () => {
         console.log("obtencion de Areas compeltada");
+       
+      },
+    });
+  }
+
+  onCheckboxChange(event: any, actividad: any) {
+    const actividadesFormArray = this.userForm.get('actividades') as FormArray;
+  
+    if (event.target.checked) {
+      // Agregar el objeto actividad al FormArray
+      actividadesFormArray.push(
+        this.fb.group({
+          nombreActividad: actividad.nombreActividad,
+          codigoActividad: actividad.codigoActividad
+        })
+      );
+    } else {
+      // Eliminar la actividad desmarcada
+      const index = actividadesFormArray.controls.findIndex(
+        (ctrl) =>
+          ctrl.value.nombreActividad === actividad.nombreActividad &&
+          ctrl.value.codigoActividad === actividad.codigoActividad
+      );
+      if (index !== -1) {
+        actividadesFormArray.removeAt(index);
+      }
+    }
+  
+    console.log(this.userForm.value.actividades); // Ver las actividades seleccionadas
+  }
+
+  loadActividades(){
+    this.actividadService.getAllActividad().subscribe({
+      next: (response) => {
+        this.actividadList = response.data;
+      },
+      error: (error) => {
+        console.error("Error al consultar las actividades", error);
+      },
+      complete: () => {
+        console.log("obtencion de Actividades compeltada");
        
       },
     });
