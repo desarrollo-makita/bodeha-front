@@ -16,7 +16,7 @@
                   <th>Email</th>
                   <th>Área</th>
                   <th>Rol</th>
-                  <th>Actividad</th>
+                  
                   <th>Estado</th>
                   <th>Nombre de Usuario</th>
                   <th>Acciones</th>
@@ -29,7 +29,6 @@
                   <td>{{ user.Email }}</td>
                   <td>{{ user.Area }}</td>
                   <td>{{ user.Rol }}</td>
-                  <td>{{ user.Actividad }}</td>
                   <td>{{ user.Estado }}</td>
                   <td>{{ user.NombreUsuario }}</td>
                   <td>
@@ -194,27 +193,41 @@
                       id="area"
                       class="form-control"
                       formControlName="area"
+                      (change)="onAreaChange($event)"
                     >
-                      <option value="herramientas">Herramientas</option>
-                      <option value="accesorios">Accesorios</option>
-                      <option value="inventario">Almacenamiento</option>
-                      <option value="ubicacion">Repuestos</option>
+                      <option *ngFor="let area of areas" [value]="area.Nombre">{{ area.Nombre }}</option>
                     </select>
                   </div>
                 </div>
-                <div class="col-md-4">
+              </div>
+              <div class="header">
+                <div class="row">
+                  <h4 class="title"><strong>Actividad</strong></h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="checkbox col-md-4">
                   <div class="form-group">
-                    <label for="actividad">Actividad</label>
-                    <select
-                      id="actividad"
-                      class="form-control"
-                      formControlName="actividad"
-                    >
-                      <option value="inventario">Inventario</option>
-                      <option value="picking">Picking</option>
-                      <option value="paking">Packing</option>
-                      <option value="ubicacion">ubicacion</option>
-                    </select>
+                    <div *ngIf="actividadList && selectedActividades">
+                      <div *ngFor="let actividad of actividadList" class="form-check">
+                        <input
+                          type="checkbox"
+                          class="form-check-input"
+                          id="{{ actividad.nombreActividad }}"
+                          [attr.data-codigo]="actividad.codigoActividad"
+                          (change)="onCheckboxChange($event, actividad)"
+                          [checked]="isActividadSelected(actividad)"
+                         
+                        />
+                        <label
+                          class="form-check-label"
+                          style="font-weight: 500;"
+                          for="{{ actividad.nombreActividad }}"
+                        >
+                          {{ actividad.nombreActividad | titlecase }}
+                        </label>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>

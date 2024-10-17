@@ -11,6 +11,11 @@ export interface User {
     NombreUsuario: string;
     Rol: string;
     UsuarioID: number;
-    Actividad: string;
+    actividad: Actividad[];
+  }
+
+  interface Actividad {
+    nombreActividad: string;
+    codigoActividad: number; // Asegúrate de que este tipo coincida con tus datos
   }
   

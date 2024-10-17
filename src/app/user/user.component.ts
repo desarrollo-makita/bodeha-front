@@ -159,7 +159,7 @@ export class UserComponent implements OnInit {
       // Suscribirse al observable devuelto por createUser
       this.userService.createUser(userData).subscribe({
         next: (response) => {
-          console.log("******************",response)
+          
           if (response.status != 200) {
             this.errorMessage = true;
             // Limpiar el formulario
@@ -176,9 +176,12 @@ export class UserComponent implements OnInit {
           ) {
             // Mostrar mensaje de éxito
             this.successMessage = true;
-
             // Limpiar el formulario
-            this.userForm.reset();
+            setTimeout(() => {
+              window.location.reload();
+            }, 2000);
+
+
           }
 
           // Ocultar el mensaje después de 2 segundos
@@ -326,4 +329,6 @@ export class UserComponent implements OnInit {
       },
     });
   }
+
+  
 }
