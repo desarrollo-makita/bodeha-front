@@ -5,6 +5,8 @@ import { MatDialog } from "@angular/material/dialog";
 import { MatSlideToggleChange } from "@angular/material/slide-toggle";
 import { Router } from "@angular/router";
 import { User } from "app/models/user.model";
+import { ActividadService } from "app/services/actividad-services/actividad-service";
+import { AreaService } from "app/services/areas-services/area-service";
 import { MyDataService } from "app/services/data/my-data.service";
 import { UserService } from "app/services/user/user.service";
 import { ConfirmDialogComponent } from "app/shared/confirm-dialog/confirm-dialog.component";
@@ -58,12 +60,19 @@ export class UserEditComponent implements OnInit {
   progressBarClass: string = "";
   progressBarWidth: number = 0;
 
+  areas: any[] = [];
+  actividadList: any[] = [];
+
+  selectedActividades: any[] = [];
+
   constructor(
     private userService: UserService,
     private fb: FormBuilder,
     private router: Router,
     private dataService: MyDataService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private areaService:AreaService,
+    private actividadService : ActividadService
   ) {
     this.asignarFecha();
   }
@@ -76,6 +85,7 @@ export class UserEditComponent implements OnInit {
     this.userService.getAllUser().subscribe({
       next: (response) => {
         this.users = response.data;
+        
       },
       error: (error) => {
         console.error("Error al obtener a los usuarios", error);
@@ -111,6 +121,9 @@ export class UserEditComponent implements OnInit {
     // Convertir la fecha a formato 'YYYY-MM-DD'
     const futureDate = currentDate.toISOString().substring(0, 10);
     this.fechaFin = futureDate;
+
+    this.loadAreas();
+    this.loadActividades();
   }
 
   asignarFecha() {
@@ -148,10 +161,16 @@ export class UserEditComponent implements OnInit {
   }
 
   editUser(data) {
+    
     this.dataUser = data;
-
-    console.log("data : ", data);
-
+    this.selectedActividades = [...this.dataUser.actividad];
+    
+    this.selectedActividades = this.dataUser.actividad.map(act => ({
+      ...act,
+      codigoActividad: Number(act.codigoActividad) // Convertimos a número para evitar conflictos de tipo
+    }));
+    
+    
     const currentDate = new Date(); // Fecha actual
     currentDate.setDate(currentDate.getDate() + 90); // Añade 90 días
 
@@ -175,7 +194,7 @@ export class UserEditComponent implements OnInit {
       usuarioActivo: this.dataUser.Estado,
       role: this.dataUser.Rol,
       area: this.dataUser.Area,
-      actividad: this.dataUser.Actividad,
+      actividad: this.dataUser.actividad,
     };
 
     this.usuario = dataReq.usuario;
@@ -198,7 +217,7 @@ export class UserEditComponent implements OnInit {
       usuarioActivo: this.dataUser.Estado,
       role: this.dataUser.Rol,
       area: this.dataUser.Area,
-      actividad: this.dataUser.Actividad,
+      actividad: this.dataUser.actividad,
       action: "delete",
       idUsuario: this.idUser,
     };
@@ -243,9 +262,11 @@ export class UserEditComponent implements OnInit {
 
   onEditSubmit() {
     let formData = this.userFormEdit.value;
+   
     formData.IdUsario = this.idUser;
     formData.fechaFin = this.fechaFin;
-    console.log("formData", formData);
+    formData.actividad =  this.selectedActividades
+    
     this.userService.updateUser(formData).subscribe({
       next: (response) => {
         if (response.status != 200) {
@@ -394,5 +415,93 @@ export class UserEditComponent implements OnInit {
       this.showErrorClave = true;
       this.showConfirmarClave = false;
     }
+  }
+
+  onAreaChange(event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    
+    const opcion = selectElement.value;
+
+    switch (opcion) {
+      case 'Herramientas':
+        this.userFormEdit.get("email")?.setValue("herramientas@makita.cl");
+        break;
+
+      case 'Accesorios':
+        this.userFormEdit.get("email")?.setValue("accesorios@makita.cl");
+        break;
+
+      case 'Recepcion':
+        this.userFormEdit.get("email")?.setValue("recepcion@makita.cl");
+        break;
+
+      case 'Repuestos':
+        this.userFormEdit.get("email")?.setValue("repuestos@makita.cl");
+        break;
+
+      default:
+        console.log('Valor no manejado');
+        break;
+    }
+    
+   
+  
+  }
+
+  loadAreas(){
+    this.areaService.getAllareas().subscribe({
+      next: (response) => {
+        this.areas = response.data;
+      },
+      error: (error) => {
+        console.error("Error al consultar las areas", error);
+      },
+      complete: () => {
+        console.log("obtencion de Areas compeltada");
+       
+      },
+    });
+  }
+
+
+  loadActividades(){
+    this.actividadService.getAllActividad().subscribe({
+      next: (response) => {
+        this.actividadList = response.data;
+      },
+      error: (error) => {
+        console.error("Error al consultar las actividades", error);
+      },
+      complete: () => {
+        console.log("obtencion de Actividades compeltada");
+       
+      },
+    });
+  }
+
+  onCheckboxChange(event: any, actividad: any) {
+
+    const actividadObj = {
+      nombreActividad: actividad.nombreActividad,
+      codigoActividad: actividad.codigoActividad
+    };
+
+    if (event.target.checked) {
+      // Si el checkbox está seleccionado, añadimos el objeto completo al arreglo
+      this.selectedActividades.push(actividadObj);
+    } else {
+      // Si el checkbox no está seleccionado, eliminamos el objeto basado en 'codigoActividad'
+      this.selectedActividades = this.selectedActividades.filter(act => act.codigoActividad !== actividad.codigoActividad);
+    }
+
+    console.log("asi queda mi arreglo de checkbox _: " , this.selectedActividades);
+  
+  
+  }
+  
+  isActividadSelected(actividad): boolean {
+    return this.selectedActividades.some(
+      selected => selected.codigoActividad === actividad.codigoActividad
+    );
   }
 }
